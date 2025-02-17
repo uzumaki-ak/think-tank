@@ -1,0 +1,19 @@
+secondary: '#FF8042',
+        tertiary: '#FF5733',
+        quaternary: '#FF1744',
+        quinary: '#FF83FA',
+        septenary: '#B00020',
+        octanary: '#F50057',
+        nonanary: '#C51162',
+        decanary: '#E91E63',
+        undecanary: '#F44336',
+        dodecanary: '#E53935',
+        tridecanary: '#D32F2F',
+        tetradecanary: '#C62828',
+        pentadecanary: '#B71C1C',
+        hexadecanary: '#FFEB3B',
+        heptadecanary: '#F9A8'
+
+
+        const getComment = () =>  {}
+getComment()

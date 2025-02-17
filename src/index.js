@@ -1,17 +1,36 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import axios from "axios";
+import "./index.css";
+import App from "./App";
+import { Provider } from "react-redux";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+import store from "./store";
+import { stables } from "./constants";
+
+axios.defaults.baseURL =  stables.API_BASE_URL;
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      // refetchOnReconnect: false,
+      // refetchOnMount: true,
+      // staleTime: 60 * 1000, // 1 minute
+      // cacheTime: 10 * 60 * 1000, // 10 minutes
+    },
+  }
+});
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  <BrowserRouter>
+      <Provider store={store}>
+    <QueryClientProvider client={queryClient}>
+        <App />
+    </QueryClientProvider>
+      </Provider>
+  </BrowserRouter>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
