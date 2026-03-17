@@ -3,9 +3,15 @@ import { Link, useNavigate } from "react-router-dom";
 import { useWindowSize } from "@uidotdev/usehooks";
 
 import { images } from "../../../../constants";
-import { AiFillDashboard, AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
+import {
+  AiFillDashboard,
+  AiOutlineClose,
+  AiOutlineMenu,
+  AiOutlineKey,
+} from "react-icons/ai";
 import { FaComments, FaUser } from "react-icons/fa6";
 import { MdDashboard } from "react-icons/md";
+import { RiMoonLine, RiSunLine } from "react-icons/ri";
 import NavItem from "./NavItem";
 import NavItemCollapse from "./NavItemCollapse";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -20,6 +26,13 @@ const Header = () => {
   const [isMenuActive, setIsMenuActive] = useState(false);
   const [activeNavName, setActiveNavName] = useState("dashboard");
   const windowSize = useWindowSize();
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return (
+      document.documentElement.classList.contains("dark") ||
+      localStorage.getItem("theme") === "dark"
+    );
+  });
 
   const { mutate: mutateCreatePost, isloading: isLoadingCreatePost } =
     useMutation({
@@ -56,8 +69,22 @@ const Header = () => {
     mutateCreatePost({ token });
   };
 
+  const toggleTheme = () => {
+    setIsDarkMode((prevState) => {
+      const nextState = !prevState;
+      if (nextState) {
+        document.documentElement.classList.add("dark");
+        localStorage.setItem("theme", "dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+        localStorage.setItem("theme", "light");
+      }
+      return nextState;
+    });
+  };
+
   return (
-    <header className="flex h-fit w-full items-center justify-between p-4 lg:full lg:max-w-[300px] lg:flex-col lg:items-start lg:justify-start lg:p-0">
+    <header className="flex w-full items-center justify-between p-4 lg:h-full lg:max-w-[300px] lg:flex-col lg:items-start lg:justify-start lg:p-0">
       {/* logo  */}
       <Link to="/">
         <img src={images.logo} alt="logo" className="w-16 lg:hidden" />
@@ -79,10 +106,23 @@ const Header = () => {
             onClick={toggleMenuHandler}
           />
           {/* sidebar  */}
-          <div className="fixed top-0 bottom-0 left-0 z-50 w-3/4 overflow-y-auto bg-white p-4 lg:static lg:h-full lg:w-full lg:p-6">
+          <div className="fixed top-0 bottom-0 left-0 z-50 w-3/4 overflow-y-auto bg-white p-4 lg:static lg:h-full lg:w-full lg:overflow-y-auto lg:p-6">
             <Link to="/">
               <img src={images.logo} alt="logo" className="w-16" />
             </Link>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="mt-6 flex w-full items-center justify-between rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-dark-soft transition hover:border-dark-soft"
+              aria-label="Toggle dark mode"
+            >
+              <span>Theme</span>
+              {isDarkMode ? (
+                <RiSunLine className="h-4 w-4" />
+              ) : (
+                <RiMoonLine className="h-4 w-4" />
+              )}
+            </button>
             <h4 className="mt-10 font-bold text-[#c7c7c7]">MAIN MENU</h4>
             {/* menu items  */}
             <div className="mt-6 flex flex-col gap-y-[0.563rem]">
@@ -128,6 +168,14 @@ const Header = () => {
                 link="/admin/users/manage"
                 icon={<FaUser className="text-xl " />}
                 name="users"
+                activeNavName={activeNavName}
+                setActiveNavName={setActiveNavName}
+              />
+              <NavItem
+                title="API Key"
+                link="/admin/settings/api-key"
+                icon={<AiOutlineKey className="text-xl " />}
+                name="api-key"
                 activeNavName={activeNavName}
                 setActiveNavName={setActiveNavName}
               />

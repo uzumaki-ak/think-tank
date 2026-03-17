@@ -16,6 +16,7 @@ import Categories from "./pages/admin/screens/categories/Categories";
 import EditCategories from "./pages/admin/screens/categories/EditCategories";
 import Users from "./pages/admin/screens/users/Users";
 import BlogPage from "./pages/blog/BlogPage";
+import ApiKeySettings from "./pages/admin/screens/settings/ApiKeySettings";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
             element={<EditCategories />}
           />
           <Route path="users/manage" element={<Users />} />
+          <Route path="settings/api-key" element={<ApiKeySettings />} />
         </Route>
       </Routes>
       <Toaster />

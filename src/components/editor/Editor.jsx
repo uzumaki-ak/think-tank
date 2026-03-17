@@ -1,10 +1,10 @@
 import { EditorContent, useEditor } from "@tiptap/react";
 import "highlight.js/styles/atom-one-dark.css";
 import MenuBar from "./MenuBar";
-import React from "react";
+import React, { useEffect } from "react";
 import { extensions } from "../../constants/tiptapExtensions";
 
-const Editor = ({ onDataChange, content, editable }) => {
+const Editor = ({ onDataChange, content, editable, onEditorReady }) => {
   const editor = useEditor({
     editable,
     extensions: extensions,
@@ -20,6 +20,12 @@ const Editor = ({ onDataChange, content, editable }) => {
     },
     content: content,
   });
+
+  useEffect(() => {
+    if (editor && onEditorReady) {
+      onEditorReady(editor);
+    }
+  }, [editor, onEditorReady]);
 
   return (
     <div className="w-full relative">

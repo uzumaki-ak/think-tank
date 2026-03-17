@@ -10,6 +10,16 @@ import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import store from "./store";
 import { stables } from "./constants";
 
+if (typeof window !== "undefined") {
+  const storedTheme = localStorage.getItem("theme");
+  const prefersDark = window.matchMedia
+    ? window.matchMedia("(prefers-color-scheme: dark)").matches
+    : false;
+  if (storedTheme === "dark" || (!storedTheme && prefersDark)) {
+    document.documentElement.classList.add("dark");
+  }
+}
+
 axios.defaults.baseURL =  stables.API_BASE_URL;
 
 const queryClient = new QueryClient({

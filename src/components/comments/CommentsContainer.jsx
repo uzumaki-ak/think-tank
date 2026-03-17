@@ -29,7 +29,7 @@ const CommentsContainer = ({
       },
       onSuccess: () => {
         toast.success(
-          "comment added successfully,will be visible after admins confirms it"
+          "comment added successfully,will be visible after admins confirms it",
         );
       },
       onError: (error) => {
@@ -71,19 +71,19 @@ const CommentsContainer = ({
       desc: value,
       parent,
       replyOnUser,
-      token: userState.userInfo.token,
+      token: userState.userInfo?.token || "",
       slug: postSlug,
     });
     setAffectedComment(null);
   };
 
   const deleteCommentHandler = (commentId) => {
-    mutateDeleteComment({token: userState.userInfo.token, commentId});
+    mutateDeleteComment({ token: userState.userInfo?.token || "", commentId });
   };
 
   const updateCommentHandler = (value, commentId) => {
     mutateUpdateComment({
-      token: userState.userInfo.token,
+      token: userState.userInfo?.token || "",
       desc: value,
       commentId,
     });

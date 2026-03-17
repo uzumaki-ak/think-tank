@@ -5,10 +5,12 @@ import {
   AiOutlineEnter,
   AiOutlineItalic,
   AiOutlineOrderedList,
+  AiOutlineLink,
   AiOutlineRedo,
   AiOutlineStrikethrough,
   AiOutlineUndo,
   AiOutlineUnorderedList,
+  AiOutlineUnderline,
 } from "react-icons/ai";
 import { BiParagraph } from "react-icons/bi";
 import { FiCode } from "react-icons/fi";
@@ -26,12 +28,23 @@ const MenuBar = ({ editor }) => {
     }
   }, [editor])
 
+  const setLink = useCallback(() => {
+    const previousUrl = editor.getAttributes("link").href;
+    const url = window.prompt("Enter URL", previousUrl || "");
+    if (url === null) return;
+    if (url === "") {
+      editor.chain().focus().extendMarkRange("link").unsetLink().run();
+      return;
+    }
+    editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
+  }, [editor]);
+
   if (!editor) {
     return null;
   }
 
   return (
-    <div className="border border-slate-300 rounded-lg p-5 sticky top-3 left-0 right-0 bg-white z-10 flex gap-0.5 flex-wrap">
+    <div className="border border-slate-300 rounded-lg p-5 sticky top-3 left-0 right-0 bg-white dark:bg-[#111111] dark:border-[#2a2a2a] z-10 flex gap-0.5 flex-wrap">
       <button
         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
         className={`flex justify-center items-center text-slate-700 rounded-lg aspect-square w-8 font-black ${
@@ -99,6 +112,15 @@ const MenuBar = ({ editor }) => {
         <AiOutlineItalic />
       </button>
       <button
+        onClick={() => editor.chain().focus().toggleUnderline().run()}
+        disabled={!editor.can().chain().focus().toggleUnderline().run()}
+        className={`flex justify-center w-8 items-center text-slate-700 rounded-lg aspect-square ${
+          editor.isActive("underline") && "active-editor-btn"
+        }`}
+      >
+        <AiOutlineUnderline />
+      </button>
+      <button
         onClick={() => editor.chain().focus().toggleStrike().run()}
         disabled={!editor.can().chain().focus().toggleStrike().run()}
         className={`flex justify-center w-8 items-center text-slate-700 rounded-lg aspect-square ${
@@ -138,6 +160,29 @@ const MenuBar = ({ editor }) => {
       </button>
 
       <button onClick={addImage} className="flex justify-center w-8 items-center text-slate-700 rounded-lg aspect-square font-extrabold"><PiImageSquareBold /></button>
+      <button
+        onClick={setLink}
+        className={`flex justify-center w-8 items-center text-slate-700 rounded-lg aspect-square ${
+          editor.isActive("link") && "active-editor-btn"
+        }`}
+      >
+        <AiOutlineLink />
+      </button>
+      <button
+        onClick={() => editor.chain().focus().unsetColor().run()}
+        className="flex justify-center w-8 items-center text-slate-700 rounded-lg aspect-square"
+        title="Reset color"
+      >
+        <span className="text-xs font-semibold">A</span>
+      </button>
+      <input
+        type="color"
+        className="h-8 w-8 cursor-pointer rounded-lg border border-slate-300 bg-transparent dark:border-[#2a2a2a]"
+        onChange={(event) =>
+          editor.chain().focus().setColor(event.target.value).run()
+        }
+        title="Text color"
+      />
 
       <button
         onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -155,14 +200,14 @@ const MenuBar = ({ editor }) => {
       >
         <AiOutlineOrderedList />
       </button>
-      {/* <button
+      <button
         onClick={() => editor.chain().focus().toggleCodeBlock().run()}
         className={`flex justify-center w-8 items-center text-slate-700 rounded-lg aspect-square ${
           editor.isActive("codeBlock") && "active-editor-btn"
         }`}
       >
         <PiCodeBlock />
-      </button> */}
+      </button>
       <button
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
         className={`flex justify-center w-8 items-center text-slate-700 rounded-lg aspect-square ${

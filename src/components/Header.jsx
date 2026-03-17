@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
-import { RiArrowDownSLine } from "react-icons/ri";
+import { RiArrowDownSLine, RiMoonLine, RiSunLine } from "react-icons/ri";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -82,6 +82,13 @@ const Header = () => {
   const [navIsVisible, setNavIsVisible] = useState(false);
   const userState = useSelector((state) => state.user);
   const [profileDropdown, setprofileDropdown] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return (
+      document.documentElement.classList.contains("dark") ||
+      localStorage.getItem("theme") === "dark"
+    );
+  });
 
   const navVisibilityHandler = () => {
     setNavIsVisible((curState) => {
@@ -93,11 +100,25 @@ const Header = () => {
     dispatch(logout());
   };
 
+  const toggleTheme = () => {
+    setIsDarkMode((prevState) => {
+      const nextState = !prevState;
+      if (nextState) {
+        document.documentElement.classList.add("dark");
+        localStorage.setItem("theme", "dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+        localStorage.setItem("theme", "light");
+      }
+      return nextState;
+    });
+  };
+
   return (
     <section className="sticky top-0 left-0 right-0 z-50  bg-white">
       <header className="container mx-auto px-5 flex justify-between py-4 items-center">
         <Link to="/">
-          <img className="w-14  rounded-lg " src={images.logo} alt="logo" />
+          <img className="w-14 rounded-full" src={images.logo} alt="logo" />
         </Link>
         <div className="lg:hidden z-50">
           {navIsVisible ? (
@@ -119,6 +140,21 @@ const Header = () => {
               <NavItem key={item.name} item={item} />
             ))}
           </ul>
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="flex items-center gap-2 rounded-full border border-white/30 px-3 py-2 text-sm font-semibold text-white transition hover:border-white/60 lg:border-dark-light lg:text-dark-soft lg:hover:border-dark-soft"
+            aria-label="Toggle dark mode"
+          >
+            {isDarkMode ? (
+              <RiSunLine className="h-4 w-4" />
+            ) : (
+              <RiMoonLine className="h-4 w-4" />
+            )}
+            <span className="hidden sm:inline">
+              {isDarkMode ? "Light" : "Dark"}
+            </span>
+          </button>
           {userState.userInfo ? (
             <div className="flex flex-col items-center gap-y-5 text-white lg:text-dark-soft lg:flex-row gap-x-3 font-semibold">
               <div className="relative group ">

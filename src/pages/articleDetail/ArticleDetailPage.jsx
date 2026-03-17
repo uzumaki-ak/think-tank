@@ -44,10 +44,9 @@ const ArticleDetailPage = () => {
     queryKey: ["posts"],
   });
 
-
   useEffect(() => {
-  window.scrollTo(0, 0); // Set scroll position to top on page load
-  },[])
+    window.scrollTo(0, 0); // Set scroll position to top on page load
+  }, []);
 
   return (
     <MainLayout>
@@ -83,17 +82,13 @@ const ArticleDetailPage = () => {
             </h1>
             <div className="w-full ">
               {!isLoading && !isError && (
-                <Editor
-                  content={data?.body}
-                  editable={false}
-                 
-                />
+                <Editor content={data?.body} editable={false} />
               )}
             </div>
             <CommentsContainer
               comments={data?.comments}
               className="mt-10"
-              logginedUserId={userState?.userInfo._id ||    ""}
+              logginedUserId={userState?.userInfo?._id || ""}
               postSlug={slug}
             />
           </article>

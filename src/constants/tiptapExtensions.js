@@ -127,28 +127,21 @@
 // export const extensions = [LowlightPlugin];
 
 import { Color } from "@tiptap/extension-color";
-import ListItem from "@tiptap/extension-list-item";
 import TextStyle from "@tiptap/extension-text-style";
 import StarterKit from "@tiptap/starter-kit";
 import Dropcursor from "@tiptap/extension-dropcursor";
 import Image from "@tiptap/extension-image";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
-import hljs from "highlight.js/lib/core"; // Import highlight.js core
-import css from "highlight.js/lib/languages/css";
-import js from "highlight.js/lib/languages/javascript";
-import ts from "highlight.js/lib/languages/typescript";
-import html from "highlight.js/lib/languages/xml";
+import Link from "@tiptap/extension-link";
+import Underline from "@tiptap/extension-underline";
+import { createLowlight, common } from "lowlight";
 
-// Register languages with highlight.js
-hljs.registerLanguage("html", html);
-hljs.registerLanguage("css", css);
-hljs.registerLanguage("javascript", js);
-hljs.registerLanguage("typescript", ts);
+const lowlight = createLowlight(common);
 
 // Exporting extensions for use in the editor
 export const extensions = [
-  Color.configure({ types: [TextStyle.name, ListItem.name] }),
-  TextStyle.configure({ types: [ListItem.name] }),
+  TextStyle,
+  Color.configure({ types: ["textStyle"] }),
   StarterKit.configure({
     bulletList: {
       keepMarks: true,
@@ -158,9 +151,20 @@ export const extensions = [
       keepMarks: true,
       keepAttributes: false,
     },
+    codeBlock: false,
   }),
+  Link.configure({
+    openOnClick: false,
+    autolink: true,
+    linkOnPaste: true,
+    HTMLAttributes: {
+      rel: "noopener noreferrer",
+      target: "_blank",
+    },
+  }),
+  Underline,
   CodeBlockLowlight.configure({
-    lowlight: hljs, // Use Highlight.js directly here
+    lowlight,
   }),
   Dropcursor,
   Image,
