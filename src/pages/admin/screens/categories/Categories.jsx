@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { useDataTable } from "../../../../hooks/useDataTable";
+import { useDataTable } from "../../../../hooks/useDataTable.js";
 import {
   createCategory,
   deleteCategory,
   getAllCategories,
-} from "../../../../services/index/postCategories";
-import DataTable from "../../components/DataTable";
+} from "../../../../services/index/postCategories.js";
+import DataTable from "../../components/DataTable.jsx";
 import { Link } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";

@@ -5,9 +5,9 @@ import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
-import MainLayout from "../../components/MainLayout";
-import { login } from "../../services/index/users";
-import { userAction } from "../../store/reducers/userReducers";
+import MainLayout from "../../components/MainLayout.jsx";
+import { login } from "../../services/index/users.js";
+import { userAction } from "../../store/reducers/userReducers.js";
 
 const LoginPage = () => {
   const navigate = useNavigate();

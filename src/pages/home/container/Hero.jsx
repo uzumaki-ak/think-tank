@@ -1,6 +1,6 @@
 import React from "react";
-import { images } from "../../../constants";
-import Search from "../../../components/Search";
+import { images } from "../../../constants/index.js";
+import Search from "../../../components/Search.jsx";
 import { useSearchParams } from "react-router-dom";
 const Hero = () => {
 

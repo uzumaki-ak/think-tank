@@ -4,10 +4,10 @@
 // import { useDispatch, useSelector } from "react-redux";
 // import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-// import MainLayout from "../../components/MainLayout";
-// import { getUserProfile, updateProfile } from "../../services/index/users";
-// import ProfilePicture from "../../components/profilePicture";
-// import { userAction } from "../../store/reducers/userReducers";
+// import MainLayout from "../../components/MainLayout.jsx";
+// import { getUserProfile, updateProfile } from "../../services/index/users.js";
+// import ProfilePicture from "../../components/profilePicture.jsx";
+// import { userAction } from "../../store/reducers/userReducers.js";
 // import toast from "react-hot-toast";
 
 // const ProfilePage = () => {
@@ -194,10 +194,10 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import MainLayout from "../../components/MainLayout";
-import { getUserProfile, updateProfile } from "../../services/index/users";
-import ProfilePicture from "../../components/profilePicture";
-import { userAction } from "../../store/reducers/userReducers";
+import MainLayout from "../../components/MainLayout.jsx";
+import { getUserProfile, updateProfile } from "../../services/index/users.js";
+import ProfilePicture from "../../components/profilePicture.jsx";
+import { userAction } from "../../store/reducers/userReducers.js";
 import toast from "react-hot-toast";
 
 const ProfilePage = () => {

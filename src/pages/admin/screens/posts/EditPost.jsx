@@ -1,22 +1,22 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import CreatableSelect from "react-select/creatable";
-import { getSinglePost, updatePost } from "../../../../services/index/posts";
+import { getSinglePost, updatePost } from "../../../../services/index/posts.js";
 
 import { Link, useParams, useNavigate } from "react-router-dom";
-import ArticleDetailSkeleton from "../../../articleDetail/components/ArticleDetailSkeleton";
-import ErrorMessage from "../../../../components/ErrorMessage";
-import { stables } from "../../../../constants";
+import ArticleDetailSkeleton from "../../../articleDetail/components/ArticleDetailSkeleton.jsx";
+import ErrorMessage from "../../../../components/ErrorMessage.jsx";
+import { stables } from "../../../../constants/index.js";
 import { FaCameraRetro } from "react-icons/fa6";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
-import Editor from "../../../../components/editor/Editor";
-import MultiSelectTagDropdown from "../../components/select-dropdown/MultiSelectTagDropdown";
-import { getAllCategories } from "../../../../services/index/postCategories";
+import Editor from "../../../../components/editor/Editor.jsx";
+import MultiSelectTagDropdown from "../../components/select-dropdown/MultiSelectTagDropdown.jsx";
+import { getAllCategories } from "../../../../services/index/postCategories.js";
 import {
   categoryToOption,
   filterCategories,
-} from "../../../../utils/multiSelectTagUtils";
+} from "../../../../utils/multiSelectTagUtils.js";
 
 const promiseOptions = async (inputValue) => {
   const {data: categoriesData} = await getAllCategories();

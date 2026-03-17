@@ -2,16 +2,16 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useWindowSize } from "@uidotdev/usehooks";
 
-import { images } from "../../../../constants";
+import { images } from "../../../../constants/index.js";
 import { AiFillDashboard, AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import { FaComments, FaUser } from "react-icons/fa6";
 import { MdDashboard } from "react-icons/md";
-import NavItem from "./NavItem";
-import NavItemCollapse from "./NavItemCollapse";
+import NavItem from "./NavItem.jsx";
+import NavItemCollapse from "./NavItemCollapse.jsx";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
-import { createPost } from "../../../../services/index/posts";
+import { createPost } from "../../../../services/index/posts.js";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ const Header = () => {
       onSuccess: (data) => {
         queryClient.invalidateQueries(["posts"]);
         toast.success("Post created :>, edit that now");
-       navigate(`/admin/posts/manage/edit/${data.slug}`)
+        navigate(`/admin/posts/manage/edit/${data.slug}`);
       },
       onError: (error) => {
         toast.error(error.message);
@@ -60,7 +60,11 @@ const Header = () => {
     <header className="flex h-fit w-full items-center justify-between p-4 lg:full lg:max-w-[300px] lg:flex-col lg:items-start lg:justify-start lg:p-0">
       {/* logo  */}
       <Link to="/">
-        <img src={images.logo} alt="logo" className="w-16 lg:hidden" />
+        <img
+          src={images.logo}
+          alt="logo"
+          className="w-16 lg:hidden rounded-full"
+        />
       </Link>
       {/* menuberg icon  */}
       <div className="cursor-pointer lg:hidden">
@@ -81,7 +85,7 @@ const Header = () => {
           {/* sidebar  */}
           <div className="fixed top-0 bottom-0 left-0 z-50 w-3/4 overflow-y-auto bg-white p-4 lg:static lg:h-full lg:w-full lg:p-6">
             <Link to="/">
-              <img src={images.logo} alt="logo" className="w-16" />
+              <img src={images.logo} alt="logo" className="w-16 rounded-full" />
             </Link>
             <h4 className="mt-10 font-bold text-[#c7c7c7]">MAIN MENU</h4>
             {/* menu items  */}
@@ -112,7 +116,7 @@ const Header = () => {
               >
                 <Link to="/admin/posts/manage">Manage all Posts</Link>
                 <button
-                disabled={isLoadingCreatePost}
+                  disabled={isLoadingCreatePost}
                   className="text-start disabled:opacity-60 disabled:cursor-not-allowed"
                   onClick={() =>
                     handleCreateNewPost({ token: userState.userInfo.token })

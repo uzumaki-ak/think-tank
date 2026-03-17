@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
-import MainLayout from "../../components/MainLayout";
-import BreadCrumbs from "../../components/BreadCrumbs";
-import { images, stables } from "../../constants";
+import MainLayout from "../../components/MainLayout.jsx";
+import BreadCrumbs from "../../components/BreadCrumbs.jsx";
+import { images, stables } from "../../constants/index.js";
 import { Link, useParams } from "react-router-dom";
 
 import { useQuery } from "@tanstack/react-query";
-import SuggestedPosts from "./container/SuggestedPosts";
-import CommentsContainer from "../../components/comments/CommentsContainer";
-import SocialShareButtons from "../../components/SocialShareButtons";
-import { getAllPosts, getSinglePost } from "../../services/index/posts";
-import ArticleDetailSkeleton from "./components/ArticleDetailSkeleton";
-import ErrorMessage from "../../components/ErrorMessage";
+import SuggestedPosts from "./container/SuggestedPosts.jsx";
+import CommentsContainer from "../../components/comments/CommentsContainer.jsx";
+import SocialShareButtons from "../../components/SocialShareButtons.jsx";
+import { getAllPosts, getSinglePost } from "../../services/index/posts.js";
+import ArticleDetailSkeleton from "./components/ArticleDetailSkeleton.jsx";
+import ErrorMessage from "../../components/ErrorMessage.jsx";
 import { useSelector } from "react-redux";
-import parseJsonToHtml from "../../utils/parseJsonToHtml";
-import Editor from "../../components/editor/Editor";
+import parseJsonToHtml from "../../utils/parseJsonToHtml.js";
+import Editor from "../../components/editor/Editor.jsx";
 
 const ArticleDetailPage = () => {
   const { slug } = useParams();

@@ -4,8 +4,8 @@ import { RiArrowDownSLine } from "react-icons/ri";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 
-import { images } from "../constants";
-import { logout } from "../store/actions/user";
+import { images } from "../constants/index.js";
+import { logout } from "../store/actions/user.js";
 
 const navItemsInfo = [
   { name: "Home", type: "link", href: "/" },

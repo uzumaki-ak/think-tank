@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { createPortal } from "react-dom";
-import { stables } from "../constants";
+import { stables } from "../constants/index.js";
 import { AiOutlineCamera } from "react-icons/ai";
-import CropEasy from "./crop/CropEasy";
+import CropEasy from "./crop/CropEasy.jsx";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { updateProfilePicture } from "../services/index/users";
+import { updateProfilePicture } from "../services/index/users.js";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { userAction } from "../store/reducers/userReducers";
+import { userAction } from "../store/reducers/userReducers.js";
 
 const ProfilePicture = ({ avatar }) => {
   const queryClient = useQueryClient()

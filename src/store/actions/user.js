@@ -1,4 +1,4 @@
-import { userAction } from "../reducers/userReducers";
+import { userAction } from "../reducers/userReducers.js";
 export const logout = () => (dispatch) => {
 dispatch(userAction.resetUserInfoo());
 

@@ -1,8 +1,8 @@
 import { EditorContent, useEditor } from "@tiptap/react";
 import "highlight.js/styles/atom-one-dark.css";
-import MenuBar from "./MenuBar";
+import MenuBar from "./MenuBar.jsx";
 import React from "react";
-import { extensions } from "../../constants/tiptapExtensions";
+import { extensions } from "../../constants/tiptapExtensions.js";
 
 const Editor = ({ onDataChange, content, editable }) => {
   const editor = useEditor({
@@ -33,10 +33,10 @@ export default Editor;
 
 // import { EditorContent, useEditor } from "@tiptap/react";
 // import "highlight.js/styles/atom-one-dark.css";
-// import MenuBar from "./MenuBar";
+// import MenuBar from "./MenuBar.jsx";
 // import React from "react";
 // import PropTypes from 'prop-types'; // For prop type validation
-// import { extensions } from "../../constants/tiptapExtensions";
+// import { extensions } from "../../constants/tiptapExtensions.js";
 
 // const Editor = ({ onDataChange = () => {}, content, editable }) => {
 //   const editor = useEditor({

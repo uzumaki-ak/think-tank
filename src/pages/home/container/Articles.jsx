@@ -2,12 +2,12 @@ import React from "react";
 
 import { FiArrowRight } from "react-icons/fi";
 
-import ArticleCard from "../../../components/ArticleCard";
+import ArticleCard from "../../../components/ArticleCard.jsx";
 import { useQuery } from "@tanstack/react-query";
-import { getAllPosts } from "../../../services/index/posts";
+import { getAllPosts } from "../../../services/index/posts.js";
 import { toast } from "react-hot-toast";
-import ArticleCardSkeleton from "../../../components/ArticleCardSkeleton";
-import ErrorMessage from "../../../components/ErrorMessage";
+import ArticleCardSkeleton from "../../../components/ArticleCardSkeleton.jsx";
+import ErrorMessage from "../../../components/ErrorMessage.jsx";
 import { Link } from "react-router-dom";
 
 const Articles = () => {

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import Cropper from "react-easy-crop";
 
-import getCroppedImg from "./cropImage";
+import getCroppedImg from "./cropImage.js";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
-import { updateProfilePicture } from "../../services/index/users";
-import { userAction } from "../../store/reducers/userReducers";
+import { updateProfilePicture } from "../../services/index/users.js";
+import { userAction } from "../../store/reducers/userReducers.js";
 import toast from "react-hot-toast";
 
 const CropEasy = ({ photo, setOpenCrop }) => {

@@ -1,5 +1,5 @@
 import React from "react";
-import { images, stables } from "../constants";
+import { images, stables } from "../constants/index.js";
 import { FiCheck } from "react-icons/fi";
 import { AiOutlineClose } from "react-icons/ai";
 import { Link } from "react-router-dom";

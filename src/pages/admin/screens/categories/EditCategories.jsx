@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import {
   getSingleCategory,
   updateCategory,
-} from "../../../../services/index/postCategories";
+} from "../../../../services/index/postCategories.js";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 

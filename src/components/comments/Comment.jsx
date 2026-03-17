@@ -1,7 +1,7 @@
 import React from "react";
-import { images, stables } from "../../constants";
+import { images, stables } from "../../constants/index.js";
 import { FiEdit, FiMessageSquare, FiTrash2 } from "react-icons/fi";
-import CommentForm from "./CommentForm";
+import CommentForm from "./CommentForm.jsx";
 
 const Comment = ({
   comment,

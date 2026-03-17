@@ -1,8 +1,8 @@
 import React from "react";
-import Header from "./components/header/Header";
+import Header from "./components/header/Header.jsx";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { getUserProfile } from "../../services/index/users";
+import { getUserProfile } from "../../services/index/users.js";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 

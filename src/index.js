@@ -3,12 +3,12 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import axios from "axios";
 import "./index.css";
-import App from "./App";
+import App from "./App.js";
 import { Provider } from "react-redux";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
-import store from "./store";
-import { stables } from "./constants";
+import store from "./store/index.js";
+import { stables } from "./constants/index.js";
 
 axios.defaults.baseURL =  stables.API_BASE_URL;
 

@@ -1,12 +1,12 @@
 // import React, { useEffect, useState } from "react";
-// import { getAllPosts } from "../../services/index/posts";
+// import { getAllPosts } from "../../services/index/posts.js";
 // import { useQuery } from "@tanstack/react-query";
 // import toast from "react-hot-toast";
-// import ArticleCardSkeleton from "../../components/ArticleCardSkeleton";
-// import ErrorMessage from "../../components/ErrorMessage";
-// import ArticleCard from "../../components/ArticleCard";
-// import MainLayout from "../../components/MainLayout";
-// import Pagination from "../../components/Pagination";
+// import ArticleCardSkeleton from "../../components/ArticleCardSkeleton.jsx";
+// import ErrorMessage from "../../components/ErrorMessage.jsx";
+// import ArticleCard from "../../components/ArticleCard.jsx";
+// import MainLayout from "../../components/MainLayout.jsx";
+// import Pagination from "../../components/Pagination.jsx";
 // import { useSearchParams } from "react-router-dom";
 
 // let isFirstRun = true;
@@ -77,19 +77,19 @@
 // export default BlogPage;
 
 import React, { useEffect, useState } from "react";
-import { getAllPosts } from "../../services/index/posts";
+import { getAllPosts } from "../../services/index/posts.js";
 import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import ArticleCardSkeleton from "../../components/ArticleCardSkeleton";
-import ErrorMessage from "../../components/ErrorMessage";
-import ArticleCard from "../../components/ArticleCard";
-import MainLayout from "../../components/MainLayout";
-import Pagination from "../../components/Pagination";
+import ArticleCardSkeleton from "../../components/ArticleCardSkeleton.jsx";
+import ErrorMessage from "../../components/ErrorMessage.jsx";
+import ArticleCard from "../../components/ArticleCard.jsx";
+import MainLayout from "../../components/MainLayout.jsx";
+import Pagination from "../../components/Pagination.jsx";
 import { useSearchParams } from "react-router-dom";
-import Search from "../../components/Search";
-import AsyncMultiSelectTagDropdown from "../../components/SelectAsyncPaginate";
-import { getAllCategories } from "../../services/index/postCategories";
-import { filterCategories } from "../../utils/multiSelectTagUtils";
+import Search from "../../components/Search.jsx";
+import AsyncMultiSelectTagDropdown from "../../components/SelectAsyncPaginate.jsx";
+import { getAllCategories } from "../../services/index/postCategories.js";
+import { filterCategories } from "../../utils/multiSelectTagUtils.js";
 
 let isFirstRun = true;
 

@@ -1,12 +1,12 @@
 import React from "react";
-import { useDataTable } from "../../../../hooks/useDataTable";
+import { useDataTable } from "../../../../hooks/useDataTable.js";
 import {
   deleteUser,
   getAllUsers,
   updateProfile,
-} from "../../../../services/index/users";
-import DataTable from "../../components/DataTable";
-import { images, stables } from "../../../../constants";
+} from "../../../../services/index/users.js";
+import DataTable from "../../components/DataTable.jsx";
+import { images, stables } from "../../../../constants/index.js";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 

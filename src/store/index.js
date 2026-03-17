@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import { userReducer } from "./reducers/userReducers";
+import { userReducer } from "./reducers/userReducers.js";
 
 
 //saving user details in redux store

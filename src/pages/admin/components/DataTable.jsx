@@ -1,5 +1,5 @@
 import React from "react";
-import Pagination from "../../../components/Pagination";
+import Pagination from "../../../components/Pagination.jsx";
 
 const DataTable = ({
   pageTitle,

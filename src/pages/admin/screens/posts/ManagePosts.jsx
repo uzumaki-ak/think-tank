@@ -1,11 +1,11 @@
-import { stables } from "../../../../constants";
-import { images } from "../../../../constants";
+import { stables } from "../../../../constants/index.js";
+import { images } from "../../../../constants/index.js";
 
-import { deletePost, getAllPosts } from "../../../../services/index/posts";
-import Pagination from "../../../../components/Pagination";
+import { deletePost, getAllPosts } from "../../../../services/index/posts.js";
+import Pagination from "../../../../components/Pagination.jsx";
 import { Link } from "react-router-dom";
-import { useDataTable } from "../../../../hooks/useDataTable";
-import DataTable from "../../components/DataTable";
+import { useDataTable } from "../../../../hooks/useDataTable.js";
+import DataTable from "../../components/DataTable.jsx";
 
 const ManagePost = () => {
   const {
