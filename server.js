@@ -83,10 +83,27 @@ connectDB();
 const app = express();
 app.use(express.json());
 
+const allowedOrigins = (
+  process.env.CORS_ORIGIN ||
+  process.env.CLIENT_URL ||
+  ""
+)
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
 const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.length === 0) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error("Not allowed by CORS"));
+  },
+  credentials: true,
   exposedHeaders: "*",
 };
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 // Basic route
 app.get("/", (req, res) => {
