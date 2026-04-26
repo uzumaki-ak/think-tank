@@ -8,6 +8,8 @@ import {
   updateProfilePicture,
   getAllUsers,
   deleteUser,
+  updateBookmark,
+  getBookmarkedPosts,
 } from "../controllers/userControllers.js";
 import { adminGuard, authGuard } from "../middleware/authMiddleware.js";
 
@@ -16,6 +18,8 @@ router.post("/login", loginUser);
 router.get("/profile", authGuard, userProfile);
 router.put("/updateProfile/:userId", authGuard, updateProfile);
 router.put("/updateProfilePicture", authGuard, updateProfilePicture);
+router.put("/updateBookmark", authGuard, updateBookmark);
+router.get("/bookmarks", authGuard, getBookmarkedPosts);
 router.get("/", authGuard, adminGuard, getAllUsers);
 router.delete("/:userId", authGuard, adminGuard, deleteUser);
 

@@ -109,6 +109,46 @@ const updatePost = async (req, res, next) => {
 
 const deletePost = async (req, res, next) => {
   try {
+    const post = await Post.findOneAndUpdate(
+      { slug: req.params.slug },
+      { isDeleted: true },
+      { new: true }
+    );
+    if (!post) {
+      const error = new Error("post was not found");
+      return next(error);
+    }
+
+    return res.json({
+      message: "Post moved to Archive / Recycle Bin",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const restorePost = async (req, res, next) => {
+  try {
+    const post = await Post.findOneAndUpdate(
+      { slug: req.params.slug },
+      { isDeleted: false },
+      { new: true }
+    );
+    if (!post) {
+      const error = new Error("post was not found");
+      return next(error);
+    }
+
+    return res.json({
+      message: "Post restored from Archive",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const hardDeletePost = async (req, res, next) => {
+  try {
     const post = await Post.findOneAndDelete({ slug: req.params.slug });
     if (!post) {
       const error = new Error("post was not found");
@@ -119,12 +159,10 @@ const deletePost = async (req, res, next) => {
       fileRemover(post.photo);
     }
 
-
-    // deleting cmnts for posts that was before post was deleted
     await Comment.deleteMany({ post: post._id });
 
     return res.json({
-      message: "Post deleted successfully",
+      message: "Post permanently expunged from database",
     });
   } catch (error) {
     next(error);
@@ -134,11 +172,10 @@ const deletePost = async (req, res, next) => {
 const getPost = async (req, res, next) => {
   try {
     const post = await Post.findOneAndUpdate(
-      { slug: req.params.slug },
+      { slug: req.params.slug, isDeleted: false },
       { $inc: { views: 1 } },
       { new: true }
     ).populate([
-
       {
         path: "user",
         select: ["avatar", "name"],
@@ -147,7 +184,6 @@ const getPost = async (req, res, next) => {
         path: "categories",
         select: ["title"],
       },
-      //comments as name of our virtual property is comments in post.js
       {
         path: "comments",
         match: {
@@ -187,12 +223,13 @@ const getPost = async (req, res, next) => {
 const getAllPosts = async (req, res, next) => {
   try {
     const filter = req.query.searchKeyboard;
+    const showDeleted = req.query.deleted === "true";
 
     const categories = req.query.categories
       ? req.query.categories.split(",")
-      : []; // expecting cate to be comma seperated
+      : [];
 
-    let where = {};
+    let where = { isDeleted: showDeleted };
 
     if (filter) {
       where.title = { $regex: filter, $options: "i" };
@@ -241,4 +278,4 @@ const getAllPosts = async (req, res, next) => {
   }
 };
 
-export { createPost, updatePost, deletePost, getPost, getAllPosts };
+export { createPost, updatePost, deletePost, getPost, getAllPosts, restorePost, hardDeletePost };

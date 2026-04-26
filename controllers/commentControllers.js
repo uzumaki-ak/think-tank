@@ -37,6 +37,12 @@ const updateComment = async (req, res, next) => {
       return next(error);
     }
 
+    // Security Guard: Admin or Owner only
+    if (!req.user.admin && comment.user.toString() !== req.user._id.toString()) {
+      const error = new Error("ACCESS DENIED / INSUFFICIENT PERMISSIONS");
+      return next(error);
+    }
+
     comment.desc = desc || comment.desc;
     comment.check = typeof check !== "undefined" ? check : comment.check;
 
@@ -48,13 +54,22 @@ const updateComment = async (req, res, next) => {
 };
 const deleteComment = async (req, res, next) => {
   try {
-    const comment = await Comment.findByIdAndDelete(req.params.commentId);
-    await Comment.deleteMany({ parent: comment._id });
+    const comment = await Comment.findById(req.params.commentId);
 
     if (!comment) {
       const error = new Error("comment not found");
       return next(error);
     }
+
+    // Security Guard: Admin or Owner only
+    if (!req.user.admin && comment.user.toString() !== req.user._id.toString()) {
+      const error = new Error("ACCESS DENIED / INSUFFICIENT PERMISSIONS");
+      return next(error);
+    }
+
+    await Comment.findByIdAndDelete(req.params.commentId);
+    await Comment.deleteMany({ parent: comment._id });
+
     return res.json({
       message: "Comment deleted successfully :(",
     });

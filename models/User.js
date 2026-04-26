@@ -14,6 +14,8 @@ const UserSchema = new Schema(
     verified: { type: Boolean, default: false },
     verificationCode: { type: String, required: false },
     admin: { type: Boolean, default: false },
+    gender: { type: String, default: "" },
+    bookmarks: [{ type: Schema.Types.ObjectId, ref: "Post" }],
   },
   { timestamps: true }
 );

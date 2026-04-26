@@ -11,6 +11,7 @@ const PostSchema = new Schema(
     tags: { type: [String] },
     categories: [{ type: Schema.Types.ObjectId, ref: "PostCategories" }],
     views: { type: Number, default: 0 },
+    isDeleted: { type: Boolean, default: false },
   },
 
   { timestamps: true, toJSON: {virtuals:true}}

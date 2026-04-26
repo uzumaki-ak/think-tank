@@ -116,6 +116,7 @@ const updateProfile = async (req, res, next) => {
 
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
+    user.gender = req.body.gender || user.gender;
     if (req.body.password && req.body.password.length < 6) {
       throw new Error("Password must be at least 6 characters ");
     } else if (req.body.password) {
@@ -131,8 +132,53 @@ const updateProfile = async (req, res, next) => {
       email: updatedUserProfile.email,
       verified: updatedUserProfile.verified,
       admin: updatedUserProfile.admin,
+      gender: updatedUserProfile.gender,
+      bookmarks: updatedUserProfile.bookmarks,
       token: await updatedUserProfile.generateJWT(),
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updateBookmark = async (req, res, next) => {
+  try {
+    const { postId } = req.body;
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const index = user.bookmarks.indexOf(postId);
+    if (index === -1) {
+      user.bookmarks.push(postId);
+    } else {
+      user.bookmarks.splice(index, 1);
+    }
+
+    await user.save();
+    return res.json(user.bookmarks);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getBookmarkedPosts = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id).populate({
+      path: "bookmarks",
+      populate: [
+        { path: "user", select: ["avatar", "name"] },
+        { path: "categories", select: ["title"] }
+      ]
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    return res.json(user.bookmarks);
   } catch (error) {
     next(error);
   }
@@ -284,4 +330,6 @@ export {
   updateProfilePicture,
   getAllUsers,
   deleteUser,
+  updateBookmark,
+  getBookmarkedPosts,
 };
