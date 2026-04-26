@@ -11,6 +11,7 @@ import ArticleDetailSkeleton from "./components/ArticleDetailSkeleton";
 import ErrorMessage from "../../components/ErrorMessage";
 import { useSelector } from "react-redux";
 import Editor from "../../components/editor/Editor";
+import BookmarkButton from "../../components/BookmarkButton";
 
 const ArticleDetailPage = () => {
   const { slug } = useParams();
@@ -91,11 +92,14 @@ const ArticleDetailPage = () => {
                     <span className="font-ibm text-xs opacity-60">{data?.views || 0} UNITS</span>
                   </div>
                 </div>
-                <div className="hidden sm:block">
-                   <SocialShareButtons
-                    url={encodeURI(window.location.href)}
-                    title={encodeURIComponent(data?.title)}
-                  />
+                <div className="flex items-center gap-6">
+                  <BookmarkButton postId={data?._id} />
+                  <div className="hidden sm:block">
+                    <SocialShareButtons
+                      url={encodeURI(window.location.href)}
+                      title={encodeURIComponent(data?.title)}
+                    />
+                  </div>
                 </div>
               </div>
 

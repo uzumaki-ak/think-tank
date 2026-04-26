@@ -113,6 +113,20 @@ const LoginPage = () => {
               {isLoading ? "ESTABLISHING LINK..." : "AUTHENTICATE"}
             </button>
 
+            <div className="mt-12 p-6 border-thin border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02]">
+              <span className="font-geist text-[8px] tracking-[0.4em] uppercase opacity-30 block mb-4">System Access Protocol / Guest Admin</span>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="font-ibm text-[9px] uppercase opacity-40">Identifier:</span>
+                  <span className="font-ibm text-[9px] uppercase tracking-wider">ichigoroy107@gmail.com</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-ibm text-[9px] uppercase opacity-40">Passkey:</span>
+                  <span className="font-ibm text-[9px] uppercase tracking-wider">123456</span>
+                </div>
+              </div>
+            </div>
+
             <div className="pt-8 border-t-thin border-black/5 dark:border-white/5 text-center">
               <p className="font-geist text-[9px] tracking-[0.2em] uppercase opacity-30">
                 Unregistered Node?{" "}

@@ -53,12 +53,30 @@ const SuggestedPosts = ({ className, header, posts = [], tags = [] }) => {
           {tags.map((item, index) => (
             <Link
               key={index}
-              to="/"
+              to={`/blog?search=${item}`}
               className="font-geist text-[9px] tracking-widest uppercase border-thin border-black/10 dark:border-white/10 px-4 py-2 hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-all"
             >
               {item}
             </Link>
           ))}
+        </div>
+      )}
+
+      {posts.length > 0 && (
+        <div className="mt-16 p-6 border-thin border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02] relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-2 font-ibm text-[8px] text-green-500 opacity-20 tracking-tighter">[PEAK_NODE]</div>
+          <span className="font-geist text-[8px] tracking-[0.4em] uppercase opacity-40 block mb-6">High Impact Card</span>
+          {posts.sort((a,b) => (b.views || 0) - (a.views || 0))[0] && (
+            <Link to={`/blog/${posts[0].slug}`} className="block">
+              <h4 className="font-syne font-bold text-md uppercase tracking-tight leading-tight mb-4 group-hover:opacity-60 transition-opacity">
+                {posts[0].title}
+              </h4>
+              <div className="flex justify-between items-center">
+                <span className="font-ibm text-[10px] text-green-500 uppercase font-bold tracking-widest">{posts[0].views || 0} READS</span>
+                <span className="font-geist text-[8px] tracking-[0.2em] uppercase opacity-20 underline underline-offset-4 decoration-dotted">Access Node</span>
+              </div>
+            </Link>
+          )}
         </div>
       )}
     </div>

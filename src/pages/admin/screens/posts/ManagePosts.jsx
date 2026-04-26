@@ -21,14 +21,23 @@ const ManagePost = () => {
   } = useDataTable({
     dataQueryFn: () => getAllPosts(searchKeyboard, currentPage),
     dataQueryKey: "posts",
-    deleteDataMessage: "post deleted successfully",
+    deleteDataMessage: "POST MOVED TO ARCHIVE",
     mutateDeleteFn: ({ slug, token }) => {
       return deletePost({ slug, token });
     },
   });
 
   return (
-    <DataTable
+    <div>
+      <div className="flex justify-end mb-8">
+        <Link 
+          to="/admin/posts/trash" 
+          className="font-bricolage text-[10px] tracking-[0.2em] uppercase border-thin border-black/10 dark:border-white/10 px-6 py-3 hover:bg-red-500/10 hover:border-red-500/50 transition-all text-red-500/60 hover:text-red-500"
+        >
+          Access Recycle Bin / Trash
+        </Link>
+      </div>
+      <DataTable
       pageTitle="Release Management"
       dalaListName="Archive Inventory"
       searchInputPlaceholder="Search by title..."
@@ -89,15 +98,15 @@ const ManagePost = () => {
                 className="font-geist text-[10px] tracking-widest uppercase text-red-500 hover:text-red-700 disabled:opacity-20 transition-colors"
                 onClick={() => deleteDataHandler({ slug: post?.slug, token: userState.userInfo.token })}
               >
-                [Delete]
+                [Archive]
               </button>
             </div>
           </td>
         </tr>
       ))}
-    </DataTable>
+      </DataTable>
+    </div>
   );
 };
 
 export default ManagePost;
-

@@ -20,9 +20,12 @@ const ArticleCard = ({ post, className }) => {
           className="w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
         />
         <div className="absolute top-4 left-4">
-          <span className="font-geist text-[9px] tracking-[0.3em] uppercase bg-matte-black text-bone px-2 py-1">
+          <Link
+            to={`/blog?category=${post.categories?.[0]?.title || "Editorial"}`}
+            className="font-geist text-[9px] tracking-[0.3em] uppercase bg-matte-black text-bone px-2 py-1 hover:bg-bone hover:text-matte-black transition-all"
+          >
             {post.categories?.[0]?.title || "Editorial"}
-          </span>
+          </Link>
         </div>
       </Link>
       

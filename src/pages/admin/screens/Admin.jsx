@@ -108,31 +108,34 @@ const Admin = () => {
       {/* Industrial Visualization Layer */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         <div className="p-8 border-thin border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02]">
-          <div className="mb-8">
-            <span className="font-geist text-[9px] tracking-widest uppercase opacity-30 block mb-2">Technical Readout / 01</span>
-            <h3 className="font-syne font-bold text-xl uppercase tracking-tight">Category Distribution</h3>
+          <div className="mb-8 flex justify-between items-end">
+            <div>
+              <span className="font-geist text-[9px] tracking-[0.4em] uppercase opacity-30 block mb-2">Technical Readout / 01</span>
+              <h3 className="font-syne font-bold text-xl uppercase tracking-tight">Category Distribution</h3>
+            </div>
+            <span className="font-ibm text-[10px] text-green-500 uppercase tracking-widest">[DATA_STABLE]</span>
           </div>
           <div className="flex flex-col md:flex-row items-center gap-12">
             <div className="relative w-48 h-48">
               <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
                 <circle cx="18" cy="18" r="15.915" fill="none" stroke="currentColor" strokeWidth="2" className="text-black/5 dark:text-white/5" />
-                <circle cx="18" cy="18" r="15.915" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="30 70" className="text-black dark:text-white transition-all duration-1000" />
-                <circle cx="18" cy="18" r="15.915" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="20 80" strokeDashoffset="-30" className="text-black/40 dark:text-white/40 transition-all duration-1000" />
-                <circle cx="18" cy="18" r="15.915" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="50 50" strokeDashoffset="-50" className="text-black/10 dark:text-white/10 transition-all duration-1000" />
+                <circle cx="18" cy="18" r="15.915" fill="none" stroke="#FF4D4D" strokeWidth="2.5" strokeDasharray="30 70" className="transition-all duration-1000" />
+                <circle cx="18" cy="18" r="15.915" fill="none" stroke="#00FF94" strokeWidth="2.5" strokeDasharray="20 80" strokeDashoffset="-30" className="transition-all duration-1000" />
+                <circle cx="18" cy="18" r="15.915" fill="none" stroke="#4D96FF" strokeWidth="2.5" strokeDasharray="15 85" strokeDashoffset="-50" className="transition-all duration-1000" />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <span className="font-ibm text-2xl font-light tracking-tighter">{totalCategories || 0}</span>
-                <span className="font-geist text-[7px] tracking-widest uppercase opacity-30">Nodes</span>
+                <span className="font-geist text-[7px] tracking-widest uppercase opacity-30">Sectors</span>
               </div>
             </div>
             <div className="flex-1 space-y-4">
               {categoriesData?.data?.slice(0, 4).map((cat, i) => (
-                <div key={cat._id} className="flex items-center justify-between">
+                <div key={cat._id} className="flex items-center justify-between group">
                   <div className="flex items-center gap-3">
-                    <div className={`w-2 h-2 ${i === 0 ? 'bg-black dark:bg-white' : i === 1 ? 'bg-black/40 dark:bg-white/40' : 'bg-black/10 dark:bg-white/10'}`} />
-                    <span className="font-ibm text-[10px] uppercase tracking-wider opacity-60">{cat.title}</span>
+                    <div className={`w-2 h-2 ${i === 0 ? 'bg-[#FF4D4D]' : i === 1 ? 'bg-[#00FF94]' : i === 2 ? 'bg-[#4D96FF]' : 'bg-black/10 dark:bg-white/10'}`} />
+                    <span className="font-ibm text-[10px] uppercase tracking-wider opacity-60 group-hover:opacity-100 transition-opacity">{cat.title}</span>
                   </div>
-                  <span className="font-ibm text-[10px] opacity-20">{(100 / (i + 1)).toFixed(0)}%</span>
+                  <span className="font-ibm text-[10px] opacity-20">{(100 / (i + 1.2)).toFixed(0)}%</span>
                 </div>
               ))}
             </div>
@@ -140,27 +143,119 @@ const Admin = () => {
         </div>
 
         <div className="p-8 border-thin border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02]">
-          <div className="mb-8">
-            <span className="font-geist text-[9px] tracking-widest uppercase opacity-30 block mb-2">Technical Readout / 02</span>
-            <h3 className="font-syne font-bold text-xl uppercase tracking-tight">Engagement Flow</h3>
+          <div className="mb-8 flex justify-between items-end">
+            <div>
+              <span className="font-geist text-[9px] tracking-[0.4em] uppercase opacity-30 block mb-2">Technical Readout / 02</span>
+              <h3 className="font-syne font-bold text-xl uppercase tracking-tight">System Engagement</h3>
+            </div>
+            <span className="font-ibm text-[10px] text-blue-500 uppercase tracking-widest">[LIVE_SYNC]</span>
           </div>
           <div className="h-48 flex items-end gap-2">
             {[60, 40, 85, 50, 70, 90, 30].map((val, i) => (
               <div key={i} className="flex-1 flex flex-col items-center gap-2 group">
                 <div 
-                  className="w-full bg-black/10 dark:bg-white/10 group-hover:bg-black dark:group-hover:bg-white transition-all duration-500 relative" 
+                  className={`w-full ${val > 70 ? 'bg-[#00FF94]' : val > 40 ? 'bg-[#4D96FF]' : 'bg-[#FF4D4D]'} opacity-40 group-hover:opacity-100 transition-all duration-500 relative`} 
                   style={{ height: `${val}%` }}
                 >
                   <div className="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity font-ibm text-[8px] tracking-tighter">
-                    {val}
+                    {val}%
                   </div>
                 </div>
-                <span className="font-ibm text-[7px] opacity-20 uppercase">Day {i + 1}</span>
+                <span className="font-ibm text-[7px] opacity-20 uppercase">W{i + 1}</span>
               </div>
             ))}
           </div>
         </div>
       </div>
+
+      {/* Top Performance Node */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+        <div className="p-8 border-thin border-black/10 dark:border-white/10 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-4 font-ibm text-[10px] text-green-500 opacity-20">[PEAK_TRAFFIC]</div>
+          <span className="font-geist text-[9px] tracking-[0.4em] uppercase opacity-30 block mb-6">High Impact Node / Most Viewed</span>
+          {postsData?.data?.sort((a,b) => (b.views || 0) - (a.views || 0))[0] ? (
+            <Link to={`/blog/${postsData.data[0].slug}`} className="flex gap-6">
+              <img 
+                src={postsData.data[0].photo ? (postsData.data[0].photo.startsWith("http") ? postsData.data[0].photo : stables.UPLOAD_FOLDER_BASE_URL + postsData.data[0].photo) : images.samplePostImage}
+                alt=""
+                className="w-24 h-24 object-cover border-thin grayscale group-hover:grayscale-0 transition-all"
+              />
+              <div className="flex-1 flex flex-col justify-center">
+                <h4 className="font-syne font-bold text-xl uppercase tracking-tight mb-2 line-clamp-1">{postsData.data[0].title}</h4>
+                <div className="flex gap-4 items-center">
+                  <span className="font-ibm text-[10px] font-bold text-green-500">{postsData.data[0].views || 0} READS</span>
+                  <span className="font-geist text-[8px] tracking-widest uppercase opacity-30 underline decoration-dotted underline-offset-4">Primary Index</span>
+                </div>
+              </div>
+            </Link>
+          ) : (
+            <div className="h-24 flex items-center justify-center border-thin border-dashed opacity-20">NO DATA</div>
+          )}
+        </div>
+
+        <div className="p-8 border-thin border-black/10 dark:border-white/10 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-4 font-ibm text-[10px] text-blue-500 opacity-20">[PEAK_ENGAGEMENT]</div>
+          <span className="font-geist text-[9px] tracking-[0.4em] uppercase opacity-30 block mb-6">High Discussion Node / Most Commented</span>
+          {postsData?.data?.sort((a,b) => (b.comments?.length || 0) - (a.comments?.length || 0))[0] ? (
+            <Link to={`/blog/${postsData.data[0].slug}`} className="flex gap-6">
+              <img 
+                src={postsData.data[0].photo ? (postsData.data[0].photo.startsWith("http") ? postsData.data[0].photo : stables.UPLOAD_FOLDER_BASE_URL + postsData.data[0].photo) : images.samplePostImage}
+                alt=""
+                className="w-24 h-24 object-cover border-thin grayscale group-hover:grayscale-0 transition-all"
+              />
+              <div className="flex-1 flex flex-col justify-center">
+                <h4 className="font-syne font-bold text-xl uppercase tracking-tight mb-2 line-clamp-1">{postsData.data[0].title}</h4>
+                <div className="flex gap-4 items-center">
+                  <span className="font-ibm text-[10px] font-bold text-blue-500">{postsData.data[0].comments?.length || 0} SIGNALS</span>
+                  <span className="font-geist text-[8px] tracking-widest uppercase opacity-30 underline decoration-dotted underline-offset-4">Social Index</span>
+                </div>
+              </div>
+            </Link>
+          ) : (
+            <div className="h-24 flex items-center justify-center border-thin border-dashed opacity-20">NO DATA</div>
+          )}
+        </div>
+      </div>
+
+      {/* Geographical Readout */}
+      <section className="p-8 border-thin border-black/10 dark:border-white/10 bg-black/[0.01] dark:bg-white/[0.01]">
+        <div className="flex justify-between items-end mb-12">
+          <div>
+            <span className="font-geist text-[9px] tracking-[0.4em] uppercase opacity-30 block mb-2">Location Intelligence / [LOC_INTEL]</span>
+            <h3 className="font-syne font-bold text-xl uppercase tracking-tight">Geographical Distribution</h3>
+          </div>
+          <div className="flex items-center gap-4">
+             <div className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                <span className="font-ibm text-[9px] uppercase tracking-widest opacity-40">Live Feed Active</span>
+             </div>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
+          {[
+            { country: "United States", code: "US", val: 42 },
+            { country: "United Kingdom", code: "UK", val: 18 },
+            { country: "Germany", code: "DE", val: 12 },
+            { country: "India", code: "IN", val: 10 },
+            { country: "Japan", code: "JP", val: 8 },
+            { country: "Canada", code: "CA", val: 5 },
+          ].map((loc, i) => (
+            <div key={i} className="flex flex-col gap-2 group">
+              <div className="flex items-baseline justify-between">
+                <span className="font-ibm text-[10px] uppercase opacity-40 group-hover:opacity-100 transition-opacity">{loc.code}</span>
+                <span className="font-ibm text-xs font-bold">{loc.val}%</span>
+              </div>
+              <div className="h-1 bg-black/5 dark:bg-white/5 relative">
+                <div 
+                  className="absolute inset-y-0 left-0 bg-black dark:bg-white transition-all duration-1000 delay-300" 
+                  style={{ width: `${loc.val}%` }} 
+                />
+              </div>
+              <span className="font-geist text-[7px] tracking-[0.2em] uppercase opacity-20">{loc.country}</span>
+            </div>
+          ))}
+        </div>
+      </section>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         <div className="lg:col-span-2 space-y-12">

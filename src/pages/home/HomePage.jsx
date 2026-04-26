@@ -2,7 +2,7 @@ import React from 'react'
 import MainLayout from '../../components/MainLayout'
 import Hero from './container/Hero'
 import Articles from './container/Articles'
-import CTA from './container/CTA'
+import Newsletter from '../../components/Newsletter'
 
 const HomePage = () => {
   return (
@@ -10,7 +10,7 @@ const HomePage = () => {
       <MainLayout>
         <Hero />
         <Articles />
-        <CTA />
+        <Newsletter />
       </MainLayout>
     </div>
   )

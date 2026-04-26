@@ -142,9 +142,28 @@ const ProfilePage = () => {
                   {errors.email && <p className="font-geist text-[8px] text-red-500 tracking-widest uppercase">{errors.email.message}</p>}
                 </div>
 
-                <div className="space-y-2">
-                  <label htmlFor="password" className="font-geist text-[9px] tracking-widest uppercase opacity-30 block">
-                    New Security Key / Password
+                <div className="flex flex-col gap-y-2 mb-6">
+                  <label htmlFor="gender" className="font-geist text-[10px] tracking-widest uppercase opacity-40 px-4">
+                    Identity Protocol / Gender
+                  </label>
+                  <select
+                    id="gender"
+                    {...register("gender")}
+                    className="w-full bg-transparent border-thin border-black/10 dark:border-white/10 p-4 font-ibm text-[10px] tracking-widest uppercase outline-none focus:border-black dark:focus:border-white transition-all appearance-none cursor-pointer"
+                  >
+                    <option value="" className="bg-bone dark:bg-matte-black">Prefer not to say</option>
+                    <option value="male" className="bg-bone dark:bg-matte-black">Male</option>
+                    <option value="female" className="bg-bone dark:bg-matte-black">Female</option>
+                    <option value="other" className="bg-bone dark:bg-matte-black">Other / Non-Binary</option>
+                  </select>
+                </div>
+
+                <div className="flex flex-col gap-y-2 mb-10">
+                  <label
+                    htmlFor="password"
+                    className="font-geist text-[10px] tracking-widest uppercase opacity-40 px-4"
+                  >
+                    Security Access / New Password
                   </label>
                   <input
                     type="password"
