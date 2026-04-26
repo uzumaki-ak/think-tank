@@ -5,6 +5,8 @@ import { fileRemover } from "../utils/fileRemover.js";
 import { v4 as uuidv4 } from "uuid";
 import imagekit from "../utils/imagekit.js";
 import { toFile } from "@imagekit/nodejs";
+import VisitorLog from "../models/VisitorLog.js";
+import axios from "axios";
 
 
 
@@ -210,10 +212,39 @@ const getPost = async (req, res, next) => {
         ],
       },
     ]);
+
     if (!post) {
       const error = new Error("post was not found");
       return next(error);
     }
+
+    // Dynamic Analytics Protocol: Log Visit
+    const logVisit = async () => {
+      try {
+        const ip = req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress || "127.0.0.1";
+        
+        let locationData = { country: "Unknown", countryCode: "XX", city: "Unknown" };
+        try {
+          // Use http instead of https if needed for free tier, or handle errors
+          const response = await axios.get(`http://ip-api.com/json/${ip}?fields=status,country,countryCode,city`);
+          if (response.data.status === "success") {
+            locationData = {
+              country: response.data.country,
+              countryCode: response.data.countryCode,
+              city: response.data.city,
+            };
+          }
+        } catch (e) {}
+
+        await VisitorLog.create({
+          post: post._id,
+          ip,
+          ...locationData,
+        });
+      } catch (e) {}
+    };
+    logVisit();
+
     return res.json(post);
   } catch (error) {
     next(error);
@@ -278,4 +309,45 @@ const getAllPosts = async (req, res, next) => {
   }
 };
 
-export { createPost, updatePost, deletePost, getPost, getAllPosts, restorePost, hardDeletePost };
+const getAnalytics = async (req, res, next) => {
+  try {
+    // 1. Dynamic Geographical Data: Top 5 Countries
+    const topCountries = await VisitorLog.aggregate([
+      { $group: { _id: "$country", count: { $sum: 1 }, code: { $first: "$countryCode" } } },
+      { $sort: { count: -1 } },
+      { $limit: 5 }
+    ]);
+
+    // 2. Engagement Flow (Last 7 Days)
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    
+    const engagementFlow = await VisitorLog.aggregate([
+      { $match: { createdAt: { $gte: sevenDaysAgo } } },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+
+    // 3. System Metrics
+    const totalVisits = await VisitorLog.countDocuments();
+    const uniqueIps = await VisitorLog.distinct("ip");
+
+    return res.json({
+      topCountries,
+      engagementFlow,
+      metrics: {
+        totalVisits,
+        uniqueIps: uniqueIps.length,
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { createPost, updatePost, deletePost, getPost, getAllPosts, restorePost, hardDeletePost, getAnalytics };

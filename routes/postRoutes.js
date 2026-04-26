@@ -8,9 +8,11 @@ import {
   updatePost,
   restorePost,
   hardDeletePost,
+  getAnalytics,
 } from "../controllers/postControllers.js";
 import { authGuard, adminGuard } from "../middleware/authMiddleware.js";
 
+router.get("/analytics", authGuard, adminGuard, getAnalytics);
 router.route("/").post(authGuard, adminGuard, createPost).get(getAllPosts);
 router
   .route("/:slug")

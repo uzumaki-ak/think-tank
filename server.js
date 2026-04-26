@@ -13,7 +13,9 @@
 // import userRoutes from "./routes/userRoutes.js";
 // import postRoutes from "./routes/postRoutes.js";
 // import commentRoutes from "./routes/commentRoutes.js";
-// import postCategoriesRoutes from "./routes/postCategoriesRoutes.js";
+// import postCategoriesRoutes from './routes/postCategoriesRoutes.js';
+import newsletterRoutes from './routes/newsletterRoutes.js';
+import aiRoutes from './routes/aiRoutes.js';
 
 // const __filename = fileURLToPath(import.meta.url);
 // const __dirname = path.dirname(__filename);
@@ -38,7 +40,9 @@
 // app.use("/api/users", userRoutes);
 // app.use("/api/posts", postRoutes);
 // app.use("/api/comments", commentRoutes);
-// app.use("/api/post-categories", postCategoriesRoutes);
+// app.use('/api/post-categories', postCategoriesRoutes);
+app.use('/api/newsletter', newsletterRoutes);
+app.use('/api/ai', aiRoutes);
 
 // //static assest need to be specified as our browser stop image from getting updated
 
@@ -72,7 +76,9 @@ import {
 import userRoutes from "./routes/userRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
-import postCategoriesRoutes from "./routes/postCategoriesRoutes.js";
+import postCategoriesRoutes from './routes/postCategoriesRoutes.js';
+import newsletterRoutes from './routes/newsletterRoutes.js';
+import aiRoutes from './routes/aiRoutes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -115,7 +121,9 @@ app.get("/", (req, res) => {
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
-app.use("/api/post-categories", postCategoriesRoutes);
+app.use('/api/post-categories', postCategoriesRoutes);
+app.use('/api/newsletter', newsletterRoutes);
+app.use('/api/ai', aiRoutes);
 
 // Serve static assets (uploads)
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
@@ -135,3 +143,5 @@ app.use(errorResponserHandler);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+
+
