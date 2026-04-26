@@ -1,5 +1,5 @@
 import React from "react";
-import AsyncSelect from "react-select/async";
+import AsyncCreatableSelect from "react-select/async-creatable";
 
 const MultiSelectTagDropdown = ({
   defaultValue = [],
@@ -7,13 +7,15 @@ const MultiSelectTagDropdown = ({
   onChange,
 }) => {
   return (
-    <AsyncSelect
+    <AsyncCreatableSelect
       defaultValue={defaultValue}
       defaultOptions
       isMulti
       loadOptions={loadOptions}
-      className="relative z-20 "
+      className="relative z-20 text-xs font-ibm uppercase tracking-widest"
+      classNamePrefix="select"
       onChange={onChange}
+      placeholder="Select or Create..."
     />
   );
 };
