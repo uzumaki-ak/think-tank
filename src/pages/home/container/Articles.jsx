@@ -22,14 +22,14 @@ const Articles = () => {
     <section className="bg-bone dark:bg-matte-black py-24 transition-colors duration-500">
       <div className="container mx-auto px-6">
         
-        <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-8">
           <div>
             <span className="font-ibm text-[10px] tracking-[0.3em] uppercase opacity-40 mb-4 block">Archive Selection</span>
-            <h2 className="font-syne font-bold text-4xl lg:text-6xl uppercase tracking-tighter">
+            <h2 className="font-syne font-bold text-3xl md:text-5xl lg:text-6xl uppercase tracking-tighter leading-tight">
               Curated <span className="italic-accent lowercase">Insights</span>
             </h2>
           </div>
-          <Link to="/blog" className="group flex items-center gap-4 font-bricolage text-sm uppercase tracking-widest pb-2 border-b-thin border-black/20 dark:border-white/20 hover:border-black dark:hover:border-white transition-all">
+          <Link to="/blog" className="group flex items-center gap-4 font-bricolage text-sm uppercase tracking-widest pb-2 border-b-thin border-black/20 dark:border-white/20 hover:border-black dark:hover:border-white transition-all w-full md:w-auto">
             <span>View All Releases</span>
             <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
           </Link>

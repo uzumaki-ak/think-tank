@@ -14,9 +14,9 @@ const Hero = () => {
             <span className="font-geist text-[10px] tracking-[0.4em] uppercase opacity-60">Volume 01 / Issue 04</span>
           </div>
 
-          <h1 className="font-syne font-extrabold text-5xl md:text-7xl lg:text-8xl xl:text-9xl leading-[0.9] tracking-tighter uppercase mb-12 max-w-5xl">
-            Think <br />
-            <span className="italic-accent lowercase tracking-normal text-matte-black/40 dark:text-bone/30 block lg:inline lg:ml-20">Tank</span> <br />
+          <h1 className="font-syne font-extrabold text-4xl md:text-7xl lg:text-8xl xl:text-9xl leading-[0.95] md:leading-[0.9] tracking-tighter uppercase mb-12 max-w-5xl">
+            Think <br className="hidden md:block" />
+            <span className="italic-accent lowercase tracking-normal text-matte-black/40 dark:text-bone/30 block md:inline md:ml-20">Tank</span> <br className="hidden md:block" />
             Intelligence.
           </h1>
 

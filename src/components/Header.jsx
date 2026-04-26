@@ -18,17 +18,18 @@ const navItemsInfo = [
   },
 ];
 
-const NavItem = ({ item }) => {
+const NavItem = ({ item, setNavIsVisible }) => {
   const [dropdown, setDropdown] = useState(false);
   const location = useLocation();
   const isActive = location.pathname === item.href;
 
   return (
-    <li className="relative">
+    <li className="relative w-full lg:w-auto">
       {item.type === "link" ? (
         <Link
           to={item.href}
-          className={`px-6 py-2 font-bricolage text-[11px] uppercase tracking-[0.3em] transition-all duration-300 ${
+          onClick={() => setNavIsVisible(false)}
+          className={`block lg:inline-block px-6 py-4 lg:py-2 font-bricolage text-sm lg:text-[11px] uppercase tracking-[0.3em] text-center lg:text-left transition-all duration-300 ${
             isActive ? "opacity-100" : "opacity-40 hover:opacity-100"
           }`}
         >
@@ -37,7 +38,7 @@ const NavItem = ({ item }) => {
       ) : (
         <div className="flex flex-col items-center">
           <button
-            className="px-6 py-2 flex gap-2 items-center font-bricolage text-[11px] uppercase tracking-[0.3em] opacity-40 hover:opacity-100 transition-all duration-300"
+            className="w-full lg:w-auto px-6 py-4 lg:py-2 flex justify-center lg:justify-start gap-2 items-center font-bricolage text-sm lg:text-[11px] uppercase tracking-[0.3em] opacity-40 hover:opacity-100 transition-all duration-300"
             onClick={() => setDropdown(!dropdown)}
           >
             <span>{item.name}</span>
@@ -46,14 +47,18 @@ const NavItem = ({ item }) => {
           <div
             className={`${
               dropdown ? "block" : "hidden"
-            } lg:absolute lg:top-full lg:left-0 lg:mt-4 bg-bone dark:bg-matte-black border-thin p-4 min-w-[220px] z-[60] animate-in fade-in slide-in-from-top-2 duration-300`}
+            } lg:absolute lg:top-full lg:left-0 lg:mt-4 bg-bone dark:bg-matte-black border-thin p-4 min-w-[220px] z-[60] animate-in fade-in slide-in-from-top-2 duration-300 w-full lg:w-auto`}
           >
             <ul className="flex flex-col gap-1">
               {item.items.map((page, index) => (
                 <Link
                   key={index}
                   to={page.href}
-                  className="px-4 py-3 text-[10px] font-ibm uppercase tracking-widest hover:bg-black/5 dark:hover:bg-white/5 transition-colors border-b-thin border-black/5 dark:border-white/5 last:border-0"
+                  onClick={() => {
+                    setNavIsVisible(false);
+                    setDropdown(false);
+                  }}
+                  className="block px-4 py-4 lg:py-3 text-[10px] font-ibm uppercase tracking-widest text-center lg:text-left hover:bg-black/5 dark:hover:bg-white/5 transition-colors border-b-thin border-black/5 dark:border-white/5 last:border-0"
                 >
                   {page.title}
                 </Link>
@@ -109,28 +114,28 @@ const Header = () => {
         </Link>
 
         {/* Mobile Toggle */}
-        <div className="lg:hidden flex items-center gap-6">
-          <button onClick={toggleTheme} className="opacity-40 hover:opacity-100 transition-opacity">
+        <div className="lg:hidden flex items-center gap-6 relative z-[100]">
+          <button onClick={toggleTheme} className="opacity-40 hover:opacity-100 transition-opacity p-2">
             {isDarkMode ? <RiSunLine size={18} /> : <RiMoonLine size={18} />}
           </button>
-          <button onClick={() => setNavIsVisible(!navIsVisible)} className="opacity-40 hover:opacity-100">
+          <button onClick={() => setNavIsVisible(!navIsVisible)} className="opacity-40 hover:opacity-100 p-2">
             {navIsVisible ? <AiOutlineClose size={24} /> : <AiOutlineMenu size={24} />}
           </button>
         </div>
 
-        {/* Desktop Nav */}
+        {/* Navigation Layer */}
         <div
           className={`${
             navIsVisible ? "translate-x-0" : "translate-x-full lg:translate-x-0"
-          } fixed inset-0 lg:static bg-bone dark:bg-matte-black lg:bg-transparent transition-transform duration-700 flex flex-col lg:flex-row items-center justify-center lg:justify-end gap-12 lg:gap-16 z-40`}
+          } fixed inset-0 lg:static bg-bone dark:bg-matte-black lg:bg-transparent transition-transform duration-500 ease-in-out flex flex-col lg:flex-row items-center justify-center lg:justify-end gap-12 lg:gap-16 z-[90]`}
         >
-          <ul className="flex flex-col lg:flex-row items-center gap-10 lg:gap-4">
+          <ul className="flex flex-col lg:flex-row items-center gap-8 lg:gap-4 w-full lg:w-auto px-12 lg:px-0">
             {navItemsInfo.map((item) => (
-              <NavItem key={item.name} item={item} />
+              <NavItem key={item.name} item={item} setNavIsVisible={setNavIsVisible} />
             ))}
           </ul>
 
-          <div className="flex items-center gap-8">
+          <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-8 mt-4 lg:mt-0">
             <button
               onClick={toggleTheme}
               className="hidden lg:block opacity-30 hover:opacity-100 transition-opacity"
@@ -140,16 +145,16 @@ const Header = () => {
             </button>
 
             {userState.userInfo ? (
-              <div className="relative">
+              <div className="relative group/profile">
                 <button
                   className="flex items-center gap-4 group"
                   onClick={() => setprofileDropdown(!profileDropdown)}
                 >
-                  <div className="flex flex-col items-end">
+                  <div className="flex flex-col items-center lg:items-end order-2 lg:order-1">
                     <span className="font-ibm text-[9px] tracking-widest uppercase opacity-30">Status: Online</span>
                     <span className="font-syne font-bold text-xs uppercase tracking-tight">{userState.userInfo.name}</span>
                   </div>
-                  <div className="w-8 h-8 border-thin border-black/10 dark:border-white/10 overflow-hidden">
+                  <div className="w-10 h-10 lg:w-8 lg:h-8 border-thin border-black/10 dark:border-white/10 overflow-hidden order-1 lg:order-2">
                      <img 
                       src={userState.userInfo.avatar ? (userState.userInfo.avatar.startsWith("http") ? userState.userInfo.avatar : stables.UPLOAD_FOLDER_BASE_URL + userState.userInfo.avatar) : images.userImage}
                       alt="Profile"
@@ -157,21 +162,22 @@ const Header = () => {
                     />
                   </div>
                 </button>
-                <div className={`${profileDropdown ? 'block' : 'hidden'} absolute top-full right-0 mt-6 bg-bone dark:bg-matte-black border-thin min-w-[240px] z-[70] animate-in fade-in slide-in-from-top-4 duration-500`}>
+                <div className={`${profileDropdown ? 'block' : 'hidden'} absolute bottom-full lg:top-full left-1/2 -translate-x-1/2 lg:left-auto lg:right-0 lg:translate-x-0 mb-6 lg:mt-6 bg-bone dark:bg-matte-black border-thin min-w-[240px] z-[100] animate-in fade-in slide-in-from-bottom-4 lg:slide-in-from-top-4 duration-500`}>
                   <div className="flex flex-col p-4">
                     <span className="font-geist text-[8px] tracking-[0.4em] uppercase opacity-20 mb-4 px-4 block">Security Console</span>
                     {userState?.userInfo?.admin && (
-                      <button onClick={() => {navigate("/admin"); setprofileDropdown(false)}} className="px-4 py-4 text-[10px] font-ibm uppercase text-left hover:bg-black/5 dark:hover:bg-white/5 border-b-thin border-black/5 dark:border-white/5 transition-colors">Access Dashboard</button>
+                      <button onClick={() => {navigate("/admin"); setNavIsVisible(false); setprofileDropdown(false)}} className="px-4 py-4 text-[10px] font-ibm uppercase text-left hover:bg-black/5 dark:hover:bg-white/5 border-b-thin border-black/5 dark:border-white/5 transition-colors">Access Dashboard</button>
                     )}
-                    <button onClick={() => {navigate("/profile"); setprofileDropdown(false)}} className="px-4 py-4 text-[10px] font-ibm uppercase text-left hover:bg-black/5 dark:hover:bg-white/5 border-b-thin border-black/5 dark:border-white/5 transition-colors">User Settings</button>
-                    <button onClick={() => dispatch(logout())} className="px-4 py-4 text-[10px] font-ibm uppercase text-left text-red-500 hover:bg-red-500/10 transition-colors mt-2">Expunge Session</button>
+                    <button onClick={() => {navigate("/profile"); setNavIsVisible(false); setprofileDropdown(false)}} className="px-4 py-4 text-[10px] font-ibm uppercase text-left hover:bg-black/5 dark:hover:bg-white/5 border-b-thin border-black/5 dark:border-white/5 transition-colors">User Settings</button>
+                    <button onClick={() => {dispatch(logout()); setNavIsVisible(false)}} className="px-4 py-4 text-[10px] font-ibm uppercase text-left text-red-500 hover:bg-red-500/10 transition-colors mt-2">Expunge Session</button>
                   </div>
                 </div>
               </div>
             ) : (
               <Link
                 to="/login"
-                className="px-10 py-3 bg-matte-black dark:bg-bone text-bone dark:text-matte-black font-bricolage text-[11px] uppercase tracking-[0.4em] hover:opacity-80 transition-all border-thin border-transparent"
+                onClick={() => setNavIsVisible(false)}
+                className="px-12 py-4 lg:px-10 lg:py-3 bg-matte-black dark:bg-bone text-bone dark:text-matte-black font-bricolage text-xs lg:text-[11px] uppercase tracking-[0.4em] hover:opacity-80 transition-all border-thin border-transparent text-center min-w-[200px] lg:min-w-0"
               >
                 Enter
               </Link>

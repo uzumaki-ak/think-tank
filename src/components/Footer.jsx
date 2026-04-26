@@ -5,18 +5,18 @@ const Footer = () => {
   return (
     <section className="bg-bone dark:bg-matte-black pt-24 transition-colors duration-500 border-t-thin border-black/10 dark:border-white/10">
       <footer className="container mx-auto px-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 pb-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 pb-20">
           
-          <div className="col-span-2 lg:col-span-1">
+          <div className="col-span-1 sm:col-span-2 lg:col-span-1 text-center sm:text-left">
             <Link to="/" className="font-syne font-extrabold text-xl tracking-tighter mb-6 block">
               THINK<span className="italic-accent font-normal lowercase tracking-normal">Tank</span>
             </Link>
-            <p className="font-inter text-xs opacity-40 leading-relaxed max-w-[200px]">
+            <p className="font-inter text-xs opacity-40 leading-relaxed max-w-[200px] mx-auto sm:mx-0">
               Precision-built archival intelligence for the inquisitive mind. Operating at the intersection of design and logic.
             </p>
           </div>
 
-          <div>
+          <div className="text-center sm:text-left">
             <h3 className="font-geist text-[10px] tracking-[0.3em] uppercase opacity-40 mb-8">Navigation</h3>
             <ul className="flex flex-col gap-4">
               {["Archive", "Edition", "Access", "Connect"].map((item) => (
@@ -29,7 +29,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          <div>
+          <div className="text-center sm:text-left">
             <h3 className="font-geist text-[10px] tracking-[0.3em] uppercase opacity-40 mb-8">Resources</h3>
             <ul className="flex flex-col gap-4">
               {["Documentation", "Manifesto", "Protocols", "Intelligence"].map((item) => (
@@ -42,7 +42,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          <div>
+          <div className="text-center sm:text-left flex flex-col items-center sm:items-start">
             <h3 className="font-geist text-[10px] tracking-[0.3em] uppercase opacity-40 mb-8">System</h3>
             <div className="flex items-center gap-3">
               <span className="relative flex h-2 w-2">
@@ -67,7 +67,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="py-8 flex justify-between items-center opacity-20">
+        <div className="py-8 flex flex-col sm:flex-row justify-between items-center gap-4 opacity-20">
           <span className="font-ibm text-[8px] tracking-widest uppercase">© 2026 THINK TANK EDITORIAL</span>
           <span className="font-ibm text-[8px] tracking-widest uppercase">DESIGNED FOR DISCIPLINE</span>
         </div>
