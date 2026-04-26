@@ -62,9 +62,12 @@ const ArticleDetailPage = () => {
               className="rounded-xl w-full "
               src={
                 data?.photo
-                  ? stables.UPLOAD_FOLDER_BASE_URL + data?.photo
+                  ? data.photo.startsWith("http")
+                    ? data.photo
+                    : stables.UPLOAD_FOLDER_BASE_URL + data.photo
                   : images.samplePostImage
               }
+
               alt={data?.title}
             />
             <div className="mt-4 flex gap-3">

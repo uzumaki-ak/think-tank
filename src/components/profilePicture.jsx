@@ -75,10 +75,15 @@ const ProfilePicture = ({ avatar }) => {
           >
             {avatar ? (
               <img
-                src={stables.UPLOAD_FOLDER_BASE_URL + avatar}
+                src={
+                  avatar.startsWith("http")
+                    ? avatar
+                    : stables.UPLOAD_FOLDER_BASE_URL + avatar
+                }
                 alt="profile"
                 className="w-full h-full object-cover"
               />
+
             ) : (
               <div className="w-full h-full bg-blue-50/50 flex justify-center items-center">
                 <AiOutlineCamera className="w-7 h-auto text-primary" />
