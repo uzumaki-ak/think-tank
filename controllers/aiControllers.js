@@ -1,18 +1,23 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const genAI = process.env.GEMINI_API_KEY ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY) : null;
-
 const generateIntelligence = async (req, res, next) => {
   try {
     const { prompt, context } = req.body;
-    if (!genAI) {
+    
+    if (!prompt) {
+      return res.status(400).json({ message: "PROMPT_MISSING: Analytical target undefined." });
+    }
+
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
       return res.json({ 
         role: "assistant", 
-        content: "SYSTEM_OFFLINE: GEMINI_API_KEY is missing. AI reasoning is currently simulated." 
+        content: "[SIMULATION_MODE] SYSTEM_OFFLINE: GEMINI_API_KEY is missing. Add your key to the environment to enable live intelligence." 
       });
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
     
     const systemPrompt = `You are the ThinkTank Editorial Intelligence Agent. 
     A high-end, minimalist, industrial-focused assistant. 
@@ -20,14 +25,22 @@ const generateIntelligence = async (req, res, next) => {
     Response Style: Concise, brutalist, precise, monochromatic in tone.
     Start responses with a status code like [ANALYSIS_ACTIVE] or [DATA_SYNC].`;
 
-    const result = await model.generateContent(`${systemPrompt}\n\nUser Query: ${prompt}`);
-    const response = await result.response;
-    const text = response.text();
+    try {
+      const result = await model.generateContent(`${systemPrompt}\n\nUser Query: ${prompt}`);
+      const response = await result.response;
+      const text = response.text();
 
-    return res.json({
-      role: "assistant",
-      content: text,
-    });
+      return res.json({
+        role: "assistant",
+        content: text,
+      });
+    } catch (aiError) {
+      console.error("AI_ENGINE_FAILURE:", aiError);
+      return res.status(500).json({ 
+        message: "AI_ENGINE_FAILURE: The intelligence core encountered an anomaly.",
+        details: aiError.message 
+      });
+    }
   } catch (error) {
     next(error);
   }
