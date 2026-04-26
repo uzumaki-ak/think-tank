@@ -17,7 +17,7 @@ const generateIntelligence = async (req, res, next) => {
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
     
     const systemPrompt = `You are the ThinkTank Editorial Intelligence Agent. 
     A high-end, minimalist, industrial-focused assistant. 
@@ -30,6 +30,10 @@ const generateIntelligence = async (req, res, next) => {
       const response = await result.response;
       const text = response.text();
 
+      if (!text) {
+        throw new Error("EMPTY_REASONING: The AI core returned an empty response.");
+      }
+
       return res.json({
         role: "assistant",
         content: text,
@@ -38,7 +42,9 @@ const generateIntelligence = async (req, res, next) => {
       console.error("AI_ENGINE_FAILURE:", aiError);
       return res.status(500).json({ 
         message: "AI_ENGINE_FAILURE: The intelligence core encountered an anomaly.",
-        details: aiError.message 
+        details: aiError.message || "Unknown Service Error",
+        role: "assistant",
+        content: `SYSTEM_ERROR: ${aiError.message || "Anomaly detected in reasoning protocol."}`
       });
     }
   } catch (error) {
