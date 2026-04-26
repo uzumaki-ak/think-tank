@@ -5,37 +5,37 @@ const Hero = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="relative overflow-hidden bg-bone dark:bg-matte-black pt-20 pb-32 lg:pt-32 lg:pb-48 transition-colors duration-500">
-      <div className="container mx-auto px-6 relative z-10">
+    <section className="relative overflow-hidden bg-bone dark:bg-matte-black pt-12 pb-24 lg:pt-32 lg:pb-48 transition-colors duration-500">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
           
-          <div className="mb-8 flex items-center gap-4">
-            <span className="w-12 h-[1px] bg-black/20 dark:bg-white/20"></span>
-            <span className="font-geist text-[10px] tracking-[0.4em] uppercase opacity-60">Volume 01 / Issue 04</span>
+          <div className="mb-6 lg:mb-8 flex items-center gap-4">
+            <span className="w-8 lg:w-12 h-[1px] bg-black/20 dark:bg-white/20"></span>
+            <span className="font-geist text-[9px] lg:text-[10px] tracking-[0.4em] uppercase opacity-60">Volume 01 / Issue 04</span>
           </div>
 
-          <h1 className="font-syne font-extrabold text-4xl md:text-7xl lg:text-8xl xl:text-9xl leading-[0.95] md:leading-[0.9] tracking-tighter uppercase mb-12 max-w-5xl">
-            Think <br className="hidden md:block" />
-            <span className="italic-accent lowercase tracking-normal text-matte-black/40 dark:text-bone/30 block md:inline md:ml-20">Tank</span> <br className="hidden md:block" />
+          <h1 className="font-syne font-extrabold text-4xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl leading-[1] md:leading-[0.9] tracking-tighter uppercase mb-10 lg:mb-12 max-w-full lg:max-w-5xl overflow-visible">
+            Think <br className="hidden sm:block" />
+            <span className="italic-accent lowercase tracking-normal text-matte-black/40 dark:text-bone/30 block sm:inline sm:ml-20">Tank</span> <br className="hidden sm:block" />
             Intelligence.
           </h1>
 
-          <div className="max-w-xl mb-16">
-            <p className="font-inter text-lg md:text-xl opacity-70 leading-relaxed tracking-tight">
+          <div className="max-w-xl mb-12 lg:mb-16 px-2 sm:px-0">
+            <p className="font-inter text-base sm:text-lg md:text-xl opacity-70 leading-relaxed tracking-tight">
               A premium archive of curated thoughts on design, engineering, and the human condition. Precision-built for the inquisitive mind.
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto items-center lg:items-start">
             <button 
               onClick={() => navigate("/blog")}
-              className="px-12 py-5 bg-matte-black dark:bg-bone text-bone dark:text-matte-black font-bricolage text-sm uppercase tracking-[0.2em] cta-invert border-thin"
+              className="w-full sm:w-auto px-12 py-5 bg-matte-black dark:bg-bone text-bone dark:text-matte-black font-bricolage text-sm uppercase tracking-[0.2em] cta-invert border-thin whitespace-nowrap"
             >
               Explore Archive
             </button>
             <button 
               onClick={() => navigate("/about")}
-              className="px-12 py-5 border-thin font-bricolage text-sm uppercase tracking-[0.2em] hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+              className="w-full sm:w-auto px-12 py-5 border-thin font-bricolage text-sm uppercase tracking-[0.2em] hover:bg-black/5 dark:hover:bg-white/5 transition-colors whitespace-nowrap"
             >
               The Vision
             </button>
