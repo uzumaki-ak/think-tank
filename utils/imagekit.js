@@ -1,4 +1,5 @@
-import ImageKit from "imagekit"; // The @imagekit/nodejs package still uses "imagekit" as the export name, but we ensure it's the right one.
+import ImageKit from "@imagekit/nodejs";
+
 import dotenv from "dotenv";
 
 dotenv.config();
