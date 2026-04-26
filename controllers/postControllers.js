@@ -71,7 +71,8 @@ const updatePost = async (req, res, next) => {
         if (req.file) {
           try {
             // Upload to ImageKit
-            const ikResponse = await imagekit.upload({
+            const ikResponse = await imagekit.files.upload({
+
               file: req.file.buffer, // required
               fileName: `${Date.now()}-${req.file.originalname}`, // required
               folder: "/blog-posts",

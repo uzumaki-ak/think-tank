@@ -148,7 +148,8 @@ const updateProfilePicture = async (req, res, next) => {
         //every thing went well
         if (req.file) {
           try {
-            const ikResponse = await imagekit.upload({
+            const ikResponse = await imagekit.files.upload({
+
               file: req.file.buffer,
               fileName: `${Date.now()}-${req.file.originalname}`,
               folder: "/avatars",
