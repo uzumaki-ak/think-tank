@@ -39,8 +39,6 @@
 // app.use("/api/posts", postRoutes);
 // app.use("/api/comments", commentRoutes);
 // app.use('/api/post-categories', postCategoriesRoutes);
-app.use('/api/newsletter', newsletterRoutes);
-app.use('/api/ai', aiRoutes);
 
 // //static assest need to be specified as our browser stop image from getting updated
 
