@@ -4,6 +4,8 @@ import User from "../models/User.js";
 import Post from "../models/Post.js";
 import { fileRemover } from "../utils/fileRemover.js";
 import imagekit from "../utils/imagekit.js";
+import { toFile } from "@imagekit/nodejs";
+
 
 
 const registerUser = async (req, res, next) => {
@@ -149,8 +151,7 @@ const updateProfilePicture = async (req, res, next) => {
         if (req.file) {
           try {
             const ikResponse = await imagekit.files.upload({
-
-              file: req.file.buffer,
+              file: await toFile(req.file.buffer, req.file.originalname),
               fileName: `${Date.now()}-${req.file.originalname}`,
               folder: "/avatars",
             });

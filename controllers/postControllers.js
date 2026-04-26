@@ -4,6 +4,8 @@ import Comment from "../models/Comment.js";
 import { fileRemover } from "../utils/fileRemover.js";
 import { v4 as uuidv4 } from "uuid";
 import imagekit from "../utils/imagekit.js";
+import { toFile } from "@imagekit/nodejs";
+
 
 
 const createPost = async (req, res, next) => {
@@ -72,9 +74,8 @@ const updatePost = async (req, res, next) => {
           try {
             // Upload to ImageKit
             const ikResponse = await imagekit.files.upload({
-
-              file: req.file.buffer, // required
-              fileName: `${Date.now()}-${req.file.originalname}`, // required
+              file: await toFile(req.file.buffer, req.file.originalname),
+              fileName: `${Date.now()}-${req.file.originalname}`,
               folder: "/blog-posts",
             });
 
