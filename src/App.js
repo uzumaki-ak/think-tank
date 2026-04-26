@@ -17,6 +17,8 @@ import EditCategories from "./pages/admin/screens/categories/EditCategories";
 import Users from "./pages/admin/screens/users/Users";
 import BlogPage from "./pages/blog/BlogPage";
 import ApiKeySettings from "./pages/admin/screens/settings/ApiKeySettings";
+import AboutPage from "./pages/about/AboutPage";
+import ContactPage from "./pages/contact/ContactPage";
 
 function App() {
   return (
@@ -25,6 +27,8 @@ function App() {
         <Route index path="/" element={<HomePage />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/blog/:slug" element={<ArticleDetailPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/profile" element={<ProfilePage />} />

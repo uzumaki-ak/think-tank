@@ -105,6 +105,63 @@ const Admin = () => {
         ))}
       </div>
 
+      {/* Industrial Visualization Layer */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="p-8 border-thin border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02]">
+          <div className="mb-8">
+            <span className="font-geist text-[9px] tracking-widest uppercase opacity-30 block mb-2">Technical Readout / 01</span>
+            <h3 className="font-syne font-bold text-xl uppercase tracking-tight">Category Distribution</h3>
+          </div>
+          <div className="flex flex-col md:flex-row items-center gap-12">
+            <div className="relative w-48 h-48">
+              <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
+                <circle cx="18" cy="18" r="15.915" fill="none" stroke="currentColor" strokeWidth="2" className="text-black/5 dark:text-white/5" />
+                <circle cx="18" cy="18" r="15.915" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="30 70" className="text-black dark:text-white transition-all duration-1000" />
+                <circle cx="18" cy="18" r="15.915" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="20 80" strokeDashoffset="-30" className="text-black/40 dark:text-white/40 transition-all duration-1000" />
+                <circle cx="18" cy="18" r="15.915" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="50 50" strokeDashoffset="-50" className="text-black/10 dark:text-white/10 transition-all duration-1000" />
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <span className="font-ibm text-2xl font-light tracking-tighter">{totalCategories || 0}</span>
+                <span className="font-geist text-[7px] tracking-widest uppercase opacity-30">Nodes</span>
+              </div>
+            </div>
+            <div className="flex-1 space-y-4">
+              {categoriesData?.data?.slice(0, 4).map((cat, i) => (
+                <div key={cat._id} className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-2 h-2 ${i === 0 ? 'bg-black dark:bg-white' : i === 1 ? 'bg-black/40 dark:bg-white/40' : 'bg-black/10 dark:bg-white/10'}`} />
+                    <span className="font-ibm text-[10px] uppercase tracking-wider opacity-60">{cat.title}</span>
+                  </div>
+                  <span className="font-ibm text-[10px] opacity-20">{(100 / (i + 1)).toFixed(0)}%</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="p-8 border-thin border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02]">
+          <div className="mb-8">
+            <span className="font-geist text-[9px] tracking-widest uppercase opacity-30 block mb-2">Technical Readout / 02</span>
+            <h3 className="font-syne font-bold text-xl uppercase tracking-tight">Engagement Flow</h3>
+          </div>
+          <div className="h-48 flex items-end gap-2">
+            {[60, 40, 85, 50, 70, 90, 30].map((val, i) => (
+              <div key={i} className="flex-1 flex flex-col items-center gap-2 group">
+                <div 
+                  className="w-full bg-black/10 dark:bg-white/10 group-hover:bg-black dark:group-hover:bg-white transition-all duration-500 relative" 
+                  style={{ height: `${val}%` }}
+                >
+                  <div className="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity font-ibm text-[8px] tracking-tighter">
+                    {val}
+                  </div>
+                </div>
+                <span className="font-ibm text-[7px] opacity-20 uppercase">Day {i + 1}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         <div className="lg:col-span-2 space-y-12">
           {/* Recent Activity */}

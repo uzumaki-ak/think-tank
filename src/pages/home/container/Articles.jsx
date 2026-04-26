@@ -45,13 +45,11 @@ const Articles = () => {
               <ErrorMessage message="Connection lost. Archive inaccessible." />
             </div>
           ) : (
-            data?.data.map((post, index) => (
+            data?.data.map((post) => (
               <ArticleCard
                 key={post._id}
                 post={post}
-                className={`border-thin border-black/10 dark:border-white/10 ${
-                  index === 0 ? "lg:col-span-2 lg:row-span-1" : ""
-                }`}
+                className="border-thin border-black/10 dark:border-white/10"
               />
             ))
           )}
