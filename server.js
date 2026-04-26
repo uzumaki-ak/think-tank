@@ -14,8 +14,6 @@
 // import postRoutes from "./routes/postRoutes.js";
 // import commentRoutes from "./routes/commentRoutes.js";
 // import postCategoriesRoutes from './routes/postCategoriesRoutes.js';
-import newsletterRoutes from './routes/newsletterRoutes.js';
-import aiRoutes from './routes/aiRoutes.js';
 
 // const __filename = fileURLToPath(import.meta.url);
 // const __dirname = path.dirname(__filename);
