@@ -3,6 +3,8 @@ import Comment from "../models/Comment.js";
 import User from "../models/User.js";
 import Post from "../models/Post.js";
 import { fileRemover } from "../utils/fileRemover.js";
+import imagekit from "../utils/imagekit.js";
+
 
 const registerUser = async (req, res, next) => {
   try {
@@ -145,30 +147,41 @@ const updateProfilePicture = async (req, res, next) => {
       } else {
         //every thing went well
         if (req.file) {
-          let filename;
-          let updatedUser = await User.findById(req.user._id);
-          filename = updatedUser.avatar;
-          if (filename) {
-            fileRemover(filename);
+          try {
+            const ikResponse = await imagekit.upload({
+              file: req.file.buffer,
+              fileName: `${Date.now()}-${req.file.originalname}`,
+              folder: "/avatars",
+            });
+
+            let updatedUser = await User.findById(req.user._id);
+            let oldAvatar = updatedUser.avatar;
+            if (oldAvatar && !oldAvatar.startsWith("http")) {
+              fileRemover(oldAvatar);
+            }
+
+            updatedUser.avatar = ikResponse.url;
+            await updatedUser.save();
+            res.json({
+              avatar: updatedUser.avatar,
+              name: updatedUser.name,
+              _id: updatedUser._id,
+              email: updatedUser.email,
+              verified: updatedUser.verified,
+              admin: updatedUser.admin,
+              token: await updatedUser.generateJWT(),
+            });
+          } catch (uploadError) {
+            next(uploadError);
           }
-          updatedUser.avatar = req.file.filename;
-          await updatedUser.save();
-          res.json({
-            avatar: updatedUser.avatar,
-            name: updatedUser.name,
-            _id: updatedUser._id,
-            email: updatedUser.email,
-            verified: updatedUser.verified,
-            admin: updatedUser.admin,
-            token: await updatedUser.generateJWT(),
-          });
         } else {
-          let filename;
           let updatedUser = await User.findById(req.user._id);
-          filename = updatedUser.avatar;
+          let oldAvatar = updatedUser.avatar;
           updatedUser.avatar = "";
           await updatedUser.save();
-          fileRemover(filename);
+          if (oldAvatar && !oldAvatar.startsWith("http")) {
+            fileRemover(oldAvatar);
+          }
           res.json({
             avatar: updatedUser.avatar,
             name: updatedUser.name,
@@ -181,6 +194,7 @@ const updateProfilePicture = async (req, res, next) => {
         }
       }
     });
+
   } catch (error) {
     next(error);
   }
@@ -249,7 +263,10 @@ const deleteUser = async (req, res, next) => {
     })
 
     await User.deleteOne({ _id: user._id });
-    fileRemover(user.avatar);
+    if (user.avatar && !user.avatar.startsWith("http")) {
+      fileRemover(user.avatar);
+    }
+
 
     res.status(204).json({ message: "User deleted successfully" });
   } catch (error) {

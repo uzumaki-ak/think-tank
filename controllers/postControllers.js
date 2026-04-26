@@ -3,6 +3,8 @@ import Post from "../models/Post.js";
 import Comment from "../models/Comment.js";
 import { fileRemover } from "../utils/fileRemover.js";
 import { v4 as uuidv4 } from "uuid";
+import imagekit from "../utils/imagekit.js";
+
 
 const createPost = async (req, res, next) => {
   try {
@@ -67,22 +69,35 @@ const updatePost = async (req, res, next) => {
       } else {
         // every thing went well
         if (req.file) {
-          let filename;
-          filename = post.photo;
-          if (filename) {
-            fileRemover(filename);
+          try {
+            // Upload to ImageKit
+            const ikResponse = await imagekit.upload({
+              file: req.file.buffer, // required
+              fileName: `${Date.now()}-${req.file.originalname}`, // required
+              folder: "/blog-posts",
+            });
+
+            let oldPhoto = post.photo;
+            if (oldPhoto && !oldPhoto.startsWith("http")) {
+              fileRemover(oldPhoto);
+            }
+            
+            post.photo = ikResponse.url;
+            handleUpdatePostData(req.body.document);
+          } catch (uploadError) {
+            next(uploadError);
           }
-          post.photo = req.file.filename;
-          handleUpdatePostData(req.body.document);
         } else {
-          let filename;
-          filename = post.photo;
+          let oldPhoto = post.photo;
           post.photo = "";
-          fileRemover(filename);
+          if (oldPhoto && !oldPhoto.startsWith("http")) {
+            fileRemover(oldPhoto);
+          }
           handleUpdatePostData(req.body.document);
         }
       }
     });
+
   } catch (error) {
     next(error);
   }
@@ -98,7 +113,10 @@ const deletePost = async (req, res, next) => {
       return next(error);
     }
 
-    fileRemover(post.photo);
+    if (post.photo && !post.photo.startsWith("http")) {
+      fileRemover(post.photo);
+    }
+
 
     // deleting cmnts for posts that was before post was deleted
     await Comment.deleteMany({ post: post._id });
