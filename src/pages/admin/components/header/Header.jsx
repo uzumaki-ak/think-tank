@@ -100,8 +100,8 @@ const Header = () => {
               >
                 <div className="flex flex-col gap-4 pl-4 mt-4 border-l-thin border-black/10 dark:border-white/10">
                   <NavItem title="Communication" link="/admin/comments" name="comments" activeNavName={activeNavName} setActiveNavName={setActiveNavName} />
-                  <NavItem title="Briefing [AI]" link="/admin" name="ai-brief" activeNavName={activeNavName} setActiveNavName={setActiveNavName} />
-                  <NavItem title="Subscribers" link="/admin" name="subscribers" activeNavName={activeNavName} setActiveNavName={setActiveNavName} />
+                  <NavItem title="Briefing [AI]" link="/admin/briefing" name="ai-brief" activeNavName={activeNavName} setActiveNavName={setActiveNavName} />
+                  <NavItem title="Subscribers" link="/admin/subscribers" name="subscribers" activeNavName={activeNavName} setActiveNavName={setActiveNavName} />
                 </div>
               </NavItemCollapse>
 
@@ -121,6 +121,7 @@ const Header = () => {
                     New Entry
                   </button>
                   <Link to="/admin/categories/manage" className="font-bricolage text-[10px] uppercase tracking-[0.3em] opacity-60 hover:opacity-100 transition-opacity">Categories</Link>
+                  <Link to="/admin/posts/trash" className="font-bricolage text-[10px] uppercase tracking-[0.3em] text-red-500/60 hover:text-red-500 transition-opacity">Recycle Bin</Link>
                 </div>
               </NavItemCollapse>
 

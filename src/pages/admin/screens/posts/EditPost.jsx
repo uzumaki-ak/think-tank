@@ -341,51 +341,51 @@ const EditPost = () => {
               <input
                 id="title"
                 value={title}
-                className="d-input d-input-bordered border-slate-300 !outline-slate-300 text-xl font-rob font-medium text-dark-hard "
+                className="d-input d-input-bordered border-black/10 dark:border-white/10 bg-transparent !outline-none text-xl font-syne font-bold text-black dark:text-white uppercase tracking-tight w-full"
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="title"
+                placeholder="INPUT_TITLE"
               />
             </div>
-            <div className="d-form-control w-full ">
+            <div className="d-form-control w-full mb-6">
               <div className="d-label flex items-center justify-between">
-                <label htmlFor="caption" className="d-label-text">
-                  Caption
+                <label htmlFor="caption" className="font-geist text-[10px] tracking-widest uppercase opacity-40">
+                  Technical Briefing / Caption
                 </label>
                 <button
                   type="button"
                   onClick={() => openAiPrompt("caption")}
-                  className="inline-flex items-center gap-1 rounded-full border border-slate-300 px-3 py-1 text-xs font-semibold text-dark-hard transition hover:border-slate-500 dark:border-[#2a2a2a] dark:text-slate-100"
+                  className="font-ibm text-[8px] tracking-widest uppercase border-thin border-black/10 dark:border-white/10 px-3 py-1 hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-all"
                 >
-                  <RiSparkling2Line className="h-3 w-3" /> AI
+                  [AI_SYNC]
                 </button>
               </div>
               <input
                 id="captions"
                 value={caption}
-                className="d-input d-input-bordered border-slate-300 !outline-slate-300 text-xl font-rob font-medium text-dark-hard "
+                className="d-input d-input-bordered border-black/10 dark:border-white/10 bg-transparent !outline-none text-sm font-ibm text-black dark:text-white uppercase tracking-widest w-full"
                 onChange={(e) => setCaption(e.target.value)}
-                placeholder="captions"
+                placeholder="INPUT_CAPTION"
               />
             </div>
-            <div className="d-form-control w-full ">
+            <div className="d-form-control w-full mb-6">
               <div className="d-label flex items-center justify-between">
-                <label htmlFor="slug" className="d-label-text">
-                  Slug
+                <label htmlFor="slug" className="font-geist text-[10px] tracking-widest uppercase opacity-40">
+                  Archive Identifier / Slug
                 </label>
                 <button
                   type="button"
                   onClick={() => openAiPrompt("slug")}
-                  className="inline-flex items-center gap-1 rounded-full border border-slate-300 px-3 py-1 text-xs font-semibold text-dark-hard transition hover:border-slate-500 dark:border-[#2a2a2a] dark:text-slate-100"
+                  className="font-ibm text-[8px] tracking-widest uppercase border-thin border-black/10 dark:border-white/10 px-3 py-1 hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-all"
                 >
-                  <RiSparkling2Line className="h-3 w-3" /> AI
+                  [AI_SYNC]
                 </button>
               </div>
               <input
                 id="slug"
                 value={postSlug}
-                className="d-input d-input-bordered border-slate-300 !outline-slate-300 text-xl font-rob font-medium text-dark-hard "
+                className="d-input d-input-bordered border-black/10 dark:border-white/10 bg-transparent !outline-none text-xs font-ibm text-black dark:text-white lowercase tracking-widest w-full"
                 onChange={(e) => setPostSlug(e.target.value.replace(/\s+/g, "-").toLowerCase())}
-                placeholder="post slug"
+                placeholder="input-slug"
               />
             </div>
             <div className="mb-5 mt-2 ">

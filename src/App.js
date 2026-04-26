@@ -18,6 +18,8 @@ import EditCategories from "./pages/admin/screens/categories/EditCategories";
 import Users from "./pages/admin/screens/users/Users";
 import BlogPage from "./pages/blog/BlogPage";
 import ApiKeySettings from "./pages/admin/screens/settings/ApiKeySettings";
+import Briefing from "./pages/admin/screens/Briefing";
+import Subscribers from "./pages/admin/screens/Subscribers";
 import AboutPage from "./pages/about/AboutPage";
 import ContactPage from "./pages/contact/ContactPage";
 import BookmarksPage from "./pages/bookmarks/BookmarksPage";
@@ -56,6 +58,8 @@ function App() {
             />
             <Route path="users/manage" element={<Users />} />
             <Route path="settings/api-key" element={<ApiKeySettings />} />
+            <Route path="briefing" element={<Briefing />} />
+            <Route path="subscribers" element={<Subscribers />} />
           </Route>
         </Route>
       </Routes>
