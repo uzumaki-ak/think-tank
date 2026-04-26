@@ -7,6 +7,8 @@ import imagekit from "../utils/imagekit.js";
 import { toFile } from "@imagekit/nodejs";
 import VisitorLog from "../models/VisitorLog.js";
 import axios from "axios";
+import mongoose from "mongoose";
+import PostCategories from "../models/PostCategories.js";
 
 
 
@@ -48,12 +50,31 @@ const updatePost = async (req, res, next) => {
         if (data) {
           const { title, caption, slug, body, tags, categories } =
             JSON.parse(data);
+
+          // Process Categories: Create if new
+          let categoryIds = [];
+          if (categories && Array.isArray(categories)) {
+            for (const cat of categories) {
+              if (mongoose.Types.ObjectId.isValid(cat)) {
+                categoryIds.push(cat);
+              } else {
+                // It's a new category title
+                let existingCategory = await PostCategories.findOne({ title: cat });
+                if (!existingCategory) {
+                  existingCategory = await PostCategories.create({ title: cat });
+                }
+                categoryIds.push(existingCategory._id);
+              }
+            }
+          }
+
           post.title = title || post.title;
           post.caption = caption || post.caption;
           post.slug = slug || post.slug;
           post.body = body || post.body;
           post.tags = tags || post.tags;
-          post.categories = categories || post.categories;
+          post.categories = categoryIds.length > 0 ? categoryIds : post.categories;
+          
           const updatedPost = await post.save();
           return res.json(updatedPost);
         } else {
