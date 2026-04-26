@@ -134,10 +134,15 @@ const EditPost = () => {
       .trim();
 
   const callGemini = async (promptText) => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userState.userInfo.token}`,
+      },
+    };
     const { data } = await axios.post("/api/ai/query", {
       prompt: promptText,
       context: "Editorial Content Suite"
-    });
+    }, config);
     return extractText(data.content);
   };
 

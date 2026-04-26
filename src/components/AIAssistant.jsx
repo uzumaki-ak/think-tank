@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useSelector } from "react-redux";
 import { RiRobot2Line, RiSendPlane2Line, RiCloseLine } from "react-icons/ri";
 
 const AIAssistant = () => {
+  const userState = useSelector((state) => state.user);
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     { role: "assistant", content: "SYSTEM_INITIALIZED: I am the ThinkTank Editorial Agent. How can I assist with your research?" }
@@ -13,6 +15,11 @@ const AIAssistant = () => {
   const handleSend = async () => {
     if (!input.trim() || isTyping) return;
     
+    if (!userState.userInfo) {
+      setMessages([...messages, { role: "assistant", content: "SYSTEM_OFFLINE: Please authenticate (Enter) to access Editorial Intelligence." }]);
+      return;
+    }
+    
     const userMessage = { role: "user", content: input };
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
@@ -20,10 +27,15 @@ const AIAssistant = () => {
     setIsTyping(true);
 
     try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userState.userInfo.token}`,
+        },
+      };
       const { data } = await axios.post("/api/ai/query", {
         prompt: input,
         context: "Global Archive Interface"
-      });
+      }, config);
       setMessages([...newMessages, data]);
     } catch (error) {
       setMessages([...newMessages, { 
