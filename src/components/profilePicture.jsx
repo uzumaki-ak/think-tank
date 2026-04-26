@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { createPortal } from "react-dom";
 import { stables } from "../constants";
-import { AiOutlineCamera } from "react-icons/ai";
 import CropEasy from "./crop/CropEasy";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,83 +9,72 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { userAction } from "../store/reducers/userReducers";
 
 const ProfilePicture = ({ avatar }) => {
-  const queryClient = useQueryClient()
-  const dispatch = useDispatch()
+  const queryClient = useQueryClient();
+  const dispatch = useDispatch();
   const userState = useSelector((state) => state.user);
   const [openCrop, setOpenCrop] = useState(false);
   const [photo, setPhoto] = useState(null);
 
-  const { mutate, isloading } = useMutation({
-    mutationFn: ({token, formData}) => {
-      return updateProfilePicture({
-        token: token,
-        formData: formData,
-      });
+  const { mutate } = useMutation({
+    mutationFn: ({ token, formData }) => {
+      return updateProfilePicture({ token, formData });
     },
     onSuccess: (data) => {
       dispatch(userAction.setUserInfo(data));
       setOpenCrop(false);
-      //saving the user in local so user dont have to login if page refreshes
       localStorage.setItem("account", JSON.stringify(data));
       queryClient.invalidateQueries(["profile"]);
-      toast.success("Profile picture removed successfully");
+      toast.success("IDENTIFIER EXPUNGED");
     },
-    onError: (error) => {
-      toast.error(error.message);
-
-      console.log(error);
-    },
+    onError: (error) => toast.error(error.message),
   });
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setPhoto({ url: URL.createObjectURL(file), file });
-    setOpenCrop(true);
+    if (file) {
+      setPhoto({ url: URL.createObjectURL(file), file });
+      setOpenCrop(true);
+    }
   };
-  const handleDeleteImage = () => {
-    if(window.confirm("Are you sure you want to delete?")) {
 
+  const handleDeleteImage = () => {
+    if (window.confirm("CONFIRM DELETION OF VISUAL IDENTIFIER?")) {
       try {
-        //same as postman here yk form.data and selected value as profileImage
         const formData = new FormData();
         formData.append("profilePicture", undefined);
-  
         mutate({ token: userState.userInfo.token, formData: formData });
       } catch (error) {
         toast.error(error.message);
-        console.log(error);
       }
     }
   };
-  
+
   return (
     <>
-      {openCrop &&
-        createPortal(
-          <CropEasy photo={photo} setOpenCrop={setOpenCrop} />,
-          document.getElementById("portal")
-        )}
+      {openCrop && createPortal(
+        <CropEasy photo={photo} setOpenCrop={setOpenCrop} />,
+        document.getElementById("portal")
+      )}
 
-      <div className="w-full flex items-center gap-x-4">
-        <div className="relative w-20 h-20 rounded-full outline-offset-2 outline-1 outline-primary overflow-hidden">
+      <div className="flex flex-col gap-6">
+        <div className="relative w-32 h-32 group border-thin border-black/10 dark:border-white/10 overflow-hidden bg-black/5 dark:bg-white/5">
           <label
             htmlFor="profilePicture"
-            className="cursor-pointer absolute inset-0 rounded-full bg-transparent"
+            className="cursor-pointer absolute inset-0 z-10 flex items-center justify-center bg-matte-black/0 group-hover:bg-matte-black/40 transition-all duration-500"
           >
+            <span className="font-geist text-[8px] tracking-widest uppercase text-white opacity-0 group-hover:opacity-100 transition-opacity">
+              [Modify]
+            </span>
             {avatar ? (
               <img
-                src={
-                  avatar.startsWith("http")
-                    ? avatar
-                    : stables.UPLOAD_FOLDER_BASE_URL + avatar
-                }
-                alt="profile"
-                className="w-full h-full object-cover"
+                src={avatar.startsWith("http") ? avatar : stables.UPLOAD_FOLDER_BASE_URL + avatar}
+                alt="profile node"
+                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
               />
-
             ) : (
-              <div className="w-full h-full bg-blue-50/50 flex justify-center items-center">
-                <AiOutlineCamera className="w-7 h-auto text-primary" />
+              <div className="w-full h-full flex flex-col justify-center items-center opacity-20">
+                <span className="font-ibm text-[10px] tracking-tighter">[X]</span>
+                <span className="font-geist text-[7px] tracking-widest uppercase mt-2">No Data</span>
               </div>
             )}
           </label>
@@ -98,15 +86,15 @@ const ProfilePicture = ({ avatar }) => {
           />
         </div>
         <button
-        onClick={handleDeleteImage}
+          onClick={handleDeleteImage}
           type="button"
-          className="border border-red-500 rounded-lg px-4 py-2 text-red-500"
+          className="font-geist text-[9px] tracking-[0.2em] uppercase text-red-500 opacity-40 hover:opacity-100 transition-opacity text-left"
         >
-          Delete
+          [Expunge Image]
         </button>
       </div>
     </>
   );
 };
 
-export default ProfilePicture;
+export default ProfilePicture;

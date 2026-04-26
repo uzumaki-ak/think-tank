@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-
 import MainLayout from "../../components/MainLayout";
 import { login } from "../../services/index/users";
 import { userAction } from "../../store/reducers/userReducers";
@@ -14,27 +13,18 @@ const LoginPage = () => {
   const dispatch = useDispatch();
   const userState = useSelector((state) => state.user);
 
-  const { mutate, isloading } = useMutation({
-    mutationFn: ({ email, password }) => {
-      return login({ email, password });
-    },
+  const { mutate, isLoading } = useMutation({
+    mutationFn: ({ email, password }) => login({ email, password }),
     onSuccess: (data) => {
       dispatch(userAction.setUserInfo(data));
-      //saving the user in local so user dont have to login if page refreshes
       localStorage.setItem("account", JSON.stringify(data));
+      toast.success("ACCESS GRANTED / SESSION INITIALIZED");
     },
-    onError: (error) => {
-      toast.error(error.message);
-
-      console.log(error);
-    },
+    onError: (error) => toast.error(error.message),
   });
 
   useEffect(() => {
-    //if user is not logged in then redirect user to home page
-    if (userState.userInfo) {
-      navigate("/");
-    }
+    if (userState.userInfo) navigate("/");
   }, [navigate, userState.userInfo]);
 
   const {
@@ -42,114 +32,101 @@ const LoginPage = () => {
     handleSubmit,
     formState: { errors, isValid },
   } = useForm({
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+    defaultValues: { email: "", password: "" },
     mode: "onChange",
   });
-  const submitHandler = (data) => {
-    const { email, password } = data;
-    mutate({ email, password });
-  };
+
+  const submitHandler = (data) => mutate(data);
 
   return (
-    <div>
-      <MainLayout>
-        <section className="container mx-auto px-5 py-10">
-          <div className="w-full max-w-sm mx-auto">
-            <h1 className="font-rob text-2xl text-dark-hard mb-8 flex justify-center font-bold">
-              Login
+    <MainLayout>
+      <section className="container mx-auto px-6 py-20 min-h-[80vh] flex items-center justify-center animate-in fade-in duration-1000">
+        <div className="w-full max-w-md">
+          <div className="mb-12">
+            <span className="font-geist text-[10px] tracking-[0.4em] uppercase opacity-40 mb-2 block">System Gateway</span>
+            <h1 className="font-syne font-extrabold text-5xl uppercase tracking-tighter leading-[0.8]">
+              IDENTIFY<br />
+              <span className="italic-accent font-normal lowercase tracking-normal">Access</span>
             </h1>
-            <form onSubmit={handleSubmit(submitHandler)}>
-              <div className="flex flex-col mb-6 w-full">
-                <label
-                  htmlFor="email"
-                  className="text-[#5a7184] font-semibold block"
-                >
-                  Email
+          </div>
+
+          <form onSubmit={handleSubmit(submitHandler)} className="space-y-8">
+            <div className="space-y-2">
+              <label htmlFor="email" className="font-geist text-[9px] tracking-widest uppercase opacity-30 block">
+                Identification / Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                {...register("email", {
+                  pattern: {
+                    value: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                    message: "INVALID IDENTIFICATION FORMAT",
+                  },
+                  required: "IDENTIFICATION REQUIRED",
+                })}
+                placeholder="USER@SYSTEM.NET"
+                className={`w-full bg-transparent border-thin p-5 font-ibm text-xs tracking-widest uppercase outline-none transition-all placeholder:opacity-10 ${
+                  errors.email ? "border-red-500" : "border-black/10 dark:border-white/10 focus:border-black/40 dark:focus:border-white/40"
+                }`}
+              />
+              {errors.email && (
+                <p className="font-geist text-[8px] text-red-500 tracking-widest uppercase">
+                  {errors.email.message}
+                </p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex justify-between items-end">
+                <label htmlFor="password" className="font-geist text-[9px] tracking-widest uppercase opacity-30 block">
+                  Security Key / Password
                 </label>
-                <input
-                  type="email"
-                  id="email"
-                  {...register("email", {
-                    pattern: {
-                      value:
-                        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                      message: "Please enter a valid email address",
-                    },
-                    required: {
-                      value: true,
-                      message: "Email is required",
-                    },
-                  })}
-                  placeholder="Enter Email"
-                  className={`placeholder:text-[#959ead] text-dark-hard mb-3 rounded-lg px-5 py-4 font-semibold block outline-none border ${
-                    errors.email ? "border-[#fa2121]" : "border-[#c3cad9]"
-                  }`}
-                />
-                {errors.email?.message && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.email?.message}
-                  </p>
-                )}
+                <Link to="/forget-password" title="Initiate Key Recovery" className="font-geist text-[8px] tracking-widest uppercase opacity-20 hover:opacity-100 transition-opacity">
+                  [RECOVER KEY]
+                </Link>
               </div>
-              <div className="flex flex-col mb-6 w-full">
-                <label
-                  htmlFor="password"
-                  className="text-[#5a7184] font-semibold block"
-                >
-                  Password
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  {...register("password", {
-                    required: {
-                      value: true,
-                      message: "Password is required",
-                    },
-                    minLength: {
-                      value: 6,
-                      message: "Password should have at least 6 characters",
-                    },
-                  })}
-                  placeholder="Enter password"
-                  className={`placeholder:text-[#959ead] text-dark-hard mb-3 rounded-lg px-5 py-4 font-semibold block outline-none border ${
-                    errors.password ? "border-[#fa2121]" : "border-[#c3cad9]"
-                  }`}
-                />
-                {errors.password?.message && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.password?.message}
-                  </p>
-                )}
-              </div>
-              <Link
-                to="/forget-password"
-                className="text-sm font-semibold text-primary"
-              >
-                Forgot Passowrd?
-              </Link>
-              <button
-                type="submit"
-                disabled={!isValid || isloading}
-                className="bg-primary text-white font-bold text-lg py-4 px-8 w-full rounded-lg my-6 disabled:opacity-70 disabled:cursor-not-allowed"
-              >
-                Sign In
-              </button>
-              <p className="text-sm font-semibold text-[#5a7184]">
-              Do Not have an account?{" "}
-                <Link to="/register" className="text-primary">
-                 Register Now
+              <input
+                type="password"
+                id="password"
+                {...register("password", {
+                  required: "SECURITY KEY REQUIRED",
+                  minLength: { value: 6, message: "KEY LENGTH INSUFFICIENT" },
+                })}
+                placeholder="••••••••"
+                className={`w-full bg-transparent border-thin p-5 font-ibm text-xs tracking-widest outline-none transition-all placeholder:opacity-10 ${
+                  errors.password ? "border-red-500" : "border-black/10 dark:border-white/10 focus:border-black/40 dark:focus:border-white/40"
+                }`}
+              />
+              {errors.password && (
+                <p className="font-geist text-[8px] text-red-500 tracking-widest uppercase">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              disabled={!isValid || isLoading}
+              className="w-full bg-matte-black text-bone dark:bg-bone dark:text-matte-black font-bricolage text-xs tracking-[0.3em] py-6 uppercase hover:opacity-80 disabled:opacity-20 transition-all"
+            >
+              {isLoading ? "ESTABLISHING LINK..." : "AUTHENTICATE"}
+            </button>
+
+            <div className="pt-8 border-t-thin border-black/5 dark:border-white/5 text-center">
+              <p className="font-geist text-[9px] tracking-[0.2em] uppercase opacity-30">
+                Unregistered Node?{" "}
+                <Link to="/register" className="opacity-100 underline underline-offset-4 hover:opacity-60 transition-opacity">
+                  Create Identity
                 </Link>
               </p>
-            </form>
-          </div>
-        </section>
-      </MainLayout>
-    </div>
+            </div>
+          </form>
+        </div>
+      </section>
+    </MainLayout>
   );
 };
 
 export default LoginPage;
+

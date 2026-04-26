@@ -1,10 +1,6 @@
 import React from "react";
 import { useDataTable } from "../../../../hooks/useDataTable";
-import {
-  deleteComment,
-  getAllComments,
-  updateComment,
-} from "../../../../services/index/comments";
+import { deleteComment, getAllComments, updateComment } from "../../../../services/index/comments";
 import DataTable from "../../components/DataTable";
 import { images, stables } from "../../../../constants";
 import { Link } from "react-router-dom";
@@ -26,52 +22,34 @@ const Comments = () => {
     deleteDataHandler,
     setCurrentPage,
   } = useDataTable({
-    dataQueryFn: () =>
-      getAllComments(userState.userInfo.token, searchKeyboard, currentPage),
+    dataQueryFn: () => getAllComments(userState.userInfo.token, searchKeyboard, currentPage),
     dataQueryKey: "comments",
-    deleteDataMessage: "comment deleted successfully",
+    deleteDataMessage: "COMMENT PURGED FROM ARCHIVE",
     mutateDeleteFn: ({ slug, token }) => {
-      return deleteComment({
-        commentId: slug,
-        token,
-      });
+      return deleteComment({ commentId: slug, token });
     },
   });
 
-  const {
-    mutate: mutateUpdateCommentCheck,
-    isLoading: isLoadingUpdateCommentCheck,
-  } = useMutation({
+  const { mutate: mutateUpdateCommentCheck } = useMutation({
     mutationFn: ({ token, check, commentId }) => {
       return updateComment({ token, check, commentId });
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries(["comments"]);
-      toast.success(
-        data?.check ? "Comment is Approved:)" : "Comment Is not approved:("
-      );
+      toast.success(data?.check ? "ACCESS GRANTED / COMMENT APPROVED" : "ACCESS REVOKED / COMMENT REJECTED");
     },
-    onError: (error) => {
-      toast.error(error.message);
-      console.log(error);
-    },
+    onError: (error) => toast.error(error.message),
   });
 
   return (
     <DataTable
-      pageTitle="ManageComments"
-      dalaListName="Comments"
-      searchInputPlaceholder="search comments..."
+      pageTitle="Intelligence Feed"
+      dalaListName="Incoming Communications"
+      searchInputPlaceholder="Scan content / Keywords..."
       searchKeyboardOnSubmitHandler={submitSearchKeyboardHandler}
       searchkeyboardOnChangeHandler={searchKeyboardHandler}
       searchKeyboard={searchKeyboard}
-      tableHeaderTitleList={[
-        "Author",
-        "Comment",
-        "In Respond to",
-        "Created At",
-        "",
-      ]}
+      tableHeaderTitleList={["Origin", "Content", "Context / Post", "Timestamp", "Operations"]}
       isFetching={isFetching}
       isLoading={isLoading}
       data={commentsData?.data}
@@ -80,138 +58,67 @@ const Comments = () => {
       headers={commentsData?.headers}
     >
       {commentsData?.data.map((comment) => (
-        <tr>
-          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <a href="/" className="relative block">
-                  <img
-                    src={
-                      comment?.user?.avatar
-                        ? stables.UPLOAD_FOLDER_BASE_URL + comment?.user?.avatar
-                        : images.userImage
-                    }
-                    alt={comment?.user?.name}
-                    className="mx-auto object-cover rounded-lg w-10 aspect-square"
-                  />
-                </a>
-              </div>
-              <div className="ml-3">
-                <p className="text-gray-900 whitespace-no-wrap">
-                  {comment?.user?.name}
-                </p>
-              </div>
+        <tr key={comment._id} className="hover:bg-black/5 dark:hover:bg-white/5 transition-colors group">
+          <td className="px-8 py-6 border-b-[0.5px] border-black/10 dark:border-white/10">
+            <div className="flex items-center gap-6">
+              <img
+                src={comment?.user?.avatar ? (comment.user.avatar.startsWith("http") ? comment.user.avatar : stables.UPLOAD_FOLDER_BASE_URL + comment.user.avatar) : images.userImage}
+                alt={comment?.user?.name}
+                className="w-10 h-10 object-cover border-thin grayscale group-hover:grayscale-0 transition-all"
+              />
+              <span className="font-syne font-bold text-sm uppercase tracking-tight">{comment?.user?.name}</span>
             </div>
           </td>
-          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-            {comment?.replyOnUser !== null && (
-              <p className="text-gray-900 whitespace-no-wrap">
-                In reply to{" "}
-                <Link
-                  to={`/blog/${comment?.post?.slug}/#comment-${comment?._id}`}
-                  className="text-blue-500 "
-                >
-                  {comment?.replyOnUser?.name}
-                </Link>
+          <td className="px-8 py-6 border-b-[0.5px] border-black/10 dark:border-white/10 max-w-xs">
+            {comment?.replyOnUser && (
+              <p className="font-ibm text-[9px] opacity-30 uppercase mb-2">
+                Reply to: <span className="opacity-100">{comment?.replyOnUser?.name}</span>
               </p>
             )}
-            <p className="text-gray-900 whitespace-no-wrap">{comment?.desc}</p>
+            <p className="font-inter text-sm opacity-60 leading-relaxed line-clamp-3">{comment?.desc}</p>
           </td>
 
-          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-            <p className="text-gray-900 whitespace-no-wrap">
-              <Link
-                to={`/blog/${comment?.post?.slug}`}
-                className="text-blue-500 "
-              >
-                {comment?.post?.title}
-              </Link>
-            </p>
+          <td className="px-8 py-6 border-b-[0.5px] border-black/10 dark:border-white/10">
+            <Link to={`/blog/${comment?.post?.slug}`} className="font-bricolage text-[11px] uppercase tracking-widest opacity-60 hover:opacity-100 transition-opacity">
+              {comment?.post?.title || "Archive Entry"}
+            </Link>
           </td>
 
-          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-            <p className="text-gray-900 whitespace-no-wrap">
+          <td className="px-8 py-6 border-b-[0.5px] border-black/10 dark:border-white/10">
+            <span className="font-ibm text-xs opacity-60">
               {new Date(comment?.createdAt).toLocaleDateString("en-IN", {
                 day: "2-digit",
-                month: "2-digit",
+                month: "short",
                 year: "2-digit",
-                hour: "numeric",
-                minute: "numeric",
-                second: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
               })}
-            </p>
+            </span>
           </td>
 
-          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200 space-x-5">
-            <button
-              disabled={isLoadingDeleteData}
-              type="button"
-              className={`${
-                comment?.check
-                  ? "text-yellow-600 hover:text-yellow-900"
-                  : "text-green-600 hover:text-green-900"
-              } disabled:opacity-70 disabled:cursor-not-allowed`}
-            
-              onClick={() => {
-                mutateUpdateCommentCheck({
+          <td className="px-8 py-6 border-b-[0.5px] border-black/10 dark:border-white/10">
+            <div className="flex gap-6 items-center">
+              <button
+                className={`font-geist text-[10px] tracking-widest uppercase transition-all ${
+                  comment?.check ? "text-orange-500" : "text-green-500"
+                } hover:opacity-50`}
+                onClick={() => mutateUpdateCommentCheck({
                   token: userState.userInfo.token,
-                  check: comment?.check ? false : true,
+                  check: !comment?.check,
                   commentId: comment?._id,
-                });
-              }}
-
-             
-            >
-              {comment?.check ? "Unapprove" : "Approve"}
-            </button>
-
-            <button
-              disabled={isLoadingDeleteData}
-              type="button"
-               className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed"
-             
-               onClick={() => {
-                deleteDataHandler({
-                  slug: comment?._id,
-                  token: userState.userInfo.token,
-                });
-              }}
-
-            >
-              Delete
-            </button>
-          </td>
-
-          {/* <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-            <p className="text-gray-900 whitespace-no-wrap">
-              {post.categories.length > 0
-                ? post.categories
-                    .slice(0, 3)
-                    .map(
-                      (category, index) =>
-                        `${category.title}${
-                          post.categories.slice(0, 3).length === index + 1
-                            ? ""
-                            : ", "
-                        }`
-                    )
-                : "Uncategorized"}
-            </p>
-          </td> */}
-
-          {/* <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-            <div className="flex gap-x-2">
-              {post.tags.length > 0
-                ? post.tags.map((tag, index) => (
-                    <p>
-                      {tag}
-                      {post.tags.length - 1 !== index && ","}
-                    </p>
-                  ))
-                : "No tags"}
+                })}
+              >
+                {comment?.check ? "[Reject]" : "[Approve]"}
+              </button>
+              <button
+                disabled={isLoadingDeleteData}
+                className="font-geist text-[10px] tracking-widest uppercase text-red-500 hover:text-red-700 disabled:opacity-20 transition-colors"
+                onClick={() => deleteDataHandler({ slug: comment?._id, token: userState.userInfo.token })}
+              >
+                [Expunge]
+              </button>
             </div>
           </td>
-*/}
         </tr>
       ))}
     </DataTable>
@@ -219,3 +126,4 @@ const Comments = () => {
 };
 
 export default Comments;
+

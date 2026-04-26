@@ -1,77 +1,61 @@
 import React from "react";
-import { images } from "../../../constants";
 
 const CTA = () => {
   return (
-    <>
-      <svg
-        className="w-full h-auto max-h-40 translate-y-[1px]"
-        preserveAspectRatio="none"
-        viewBox="0 0 2160 263"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          id="Wave"
-          fillRule="evenodd"
-          clipRule="evenodd"
-          d="M2160 262.5H0V0C360 80 720 120 1080 120C1440 120 1800 80 2160 0V262.5Z"
-          fill="#0D2436"
-        />
-      </svg>
-      <section className="relative bg-dark-hard px-5 ">
-        <div className="container grid-cols-12 mx-auto py-10 md:pb-20 lg:place-items-center">
-          <div className="col-span-12 lg:col-span-6">
-            <h2 className="text-white font-rob font-bold text-2xl md:text-4xl md:text-center md:leading-normal lg:text-left">
-              Get our stories delivered from us to yoir inbox weekly.
+    <section className="relative bg-matte-black py-24 lg:py-40 transition-colors duration-500 overflow-hidden">
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+          
+          <div>
+            <span className="font-ibm text-[10px] tracking-[0.4em] uppercase text-bone/40 mb-6 block">Communication / Newsletter</span>
+            <h2 className="text-bone font-syne font-extrabold text-4xl md:text-6xl uppercase leading-[0.95] tracking-tighter mb-10">
+              Intelligence <br />
+              <span className="italic-accent lowercase tracking-normal text-bone/30">Delivered</span> <br />
+              Weekly.
             </h2>
-            <div className="w-full max-w-[494px] mt-12 space-y-3 mx-auto md:space-y-0 md:flex md:items-center md:space-x-2 lg:mx-0">
-              <input
-                type="text"
-                placeholder="your email"
-                className="px-4 py-3 rounded-lg  placeholder:to-dark-light w-full"
-              />
-              <button
-                className="px-4 py-3 rounded-lg bg-primary w-full to-white
-           font-bold md:w-fit md:whitespace-nowrap"
-              >
-                Get Started
-              </button>
-            </div>
-            <p className="text-dark-light text-sm leading-7 mt-6 md:text-center md:text-base lg:text-left ">
-              <span className="font-bold italic text-[#B3BA65] md:not-italic md:font-normal md:text-dark-light">
-                {" "}
-                Lorem ipsum dolor sit
-              </span>{" "}
-              amet consectetur adipisicing elit. Eos autem vel repellendus
-              consectetur assumenda laborum fugiat.
+            <p className="text-bone/60 font-inter text-lg max-w-md leading-relaxed mb-12">
+              Join 50,000+ inquisitive minds. No spam, no fluff. Just pure, architectural insights delivered to your terminal.
             </p>
           </div>
-          <div className="col-span-12 hidden mt-[70px] md:block md:order-first lg:col-span-6 lg:order-last">
-            <div className="w-3/4 mx-auto relative">
-              <div className="w-1/2 h-1/2 bg-[#FC5A5A] rounded-lg absolute top-[10%] -right-[8%]" />
-              <div className="w-1/2 h-1/2 bg-[#ebe9e9] rounded-lg opacity-[.06] absolute -bottom-[10%] -left-[8%]" />
-              <div className="rounded-xl w-full bg-white p-3 z-[1] relative">
-                <img
-                  src={images.CtaImage}
-                  alt="title"
-                  className="w-full object-cover object-center h-auto md:h-52 lg:h-48 xl:h-60"
+
+          <div className="border-thin border-white/10 p-8 md:p-12 bg-white/5 backdrop-blur-sm relative">
+            <div className="absolute -top-3 -right-3 w-6 h-6 bg-bone flex items-center justify-center">
+              <span className="text-matte-black font-ibm text-[10px] font-bold">+</span>
+            </div>
+            
+            <form className="flex flex-col gap-6">
+              <div className="flex flex-col gap-2">
+                <label className="font-geist text-[9px] tracking-widest uppercase text-bone/40">Input / Identification</label>
+                <input
+                  type="email"
+                  placeholder="USER@NETWORK.COM"
+                  className="bg-transparent border-b-thin border-white/20 py-4 font-ibm text-bone placeholder:text-white/10 focus:border-white outline-none transition-all"
                 />
-                <div className="p-5">
-                  <h2 className="font-rob font-bold text-xl text-dark-soft md:text-2xl lg:text-[28px]">
-                    Future Of Work
-                  </h2>
-                  <p className="text-dark-light mt-3 text-sm md:text-lg ">
-                    Majority Of People Will Work In Job That Don't exist Today
-                  </p>
-                </div>
               </div>
+              
+              <button
+                type="submit"
+                className="w-full py-6 bg-bone text-matte-black font-bricolage text-sm uppercase tracking-[0.2em] hover:bg-white/90 transition-all active:scale-[0.98]"
+              >
+                Establish Connection
+              </button>
+            </form>
+
+            <div className="mt-10 flex justify-between items-center opacity-20 font-ibm text-[8px] tracking-widest uppercase">
+              <span>Secure Protocol</span>
+              <span>v.01.2026</span>
             </div>
           </div>
+
         </div>
-      </section>
-    </>
+      </div>
+
+      {/* Decorative Architectural Line */}
+      <div className="absolute top-0 right-1/4 w-[1px] h-full bg-white/5 hidden lg:block"></div>
+      <div className="absolute bottom-1/4 left-0 w-full h-[1px] bg-white/5 hidden lg:block"></div>
+    </section>
   );
 };
 
 export default CTA;
+

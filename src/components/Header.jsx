@@ -1,69 +1,59 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import { RiArrowDownSLine, RiMoonLine, RiSunLine } from "react-icons/ri";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate, Link } from "react-router-dom";
-
-import { images } from "../constants";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { logout } from "../store/actions/user";
+import { images, stables } from "../constants";
 
 const navItemsInfo = [
-  { name: "Home", type: "link", href: "/" },
-  { name: "Blog", type: "link", href: "/blog" },
+  { name: "ARCHIVE", type: "link", href: "/blog" },
   {
-    name: "Pages",
+    name: "EDITION",
     type: "dropdown",
     items: [
-      { title: "About us", href: "/about" },
-      { title: "Contact us", href: "/contact" },
+      { title: "ABOUT SYSTEM", href: "/about" },
+      { title: "CONNECT", href: "/contact" },
     ],
   },
-  { name: "Pricing", type: "link", href: "/pricing" },
-  { name: "Faq", type: "link", href: "/faq" },
 ];
 
 const NavItem = ({ item }) => {
   const [dropdown, setDropdown] = useState(false);
-  const toggleDropdownHandler = () => {
-    setDropdown((curState) => {
-      return !curState;
-    });
-  };
+  const location = useLocation();
+  const isActive = location.pathname === item.href;
 
   return (
-    <li className=" relative group">
+    <li className="relative">
       {item.type === "link" ? (
-        <>
-          <Link
-            to={item.href}
-            className="px-4 py-2 group-hover:text-yellow-700"
-          >
-            {item.name}
-          </Link>
-          <span className="cursor-pointer text-blue-500 absolute transition-all duration-500 font-bold right-0 top-0  group-hover:right-[90%] opacity-0 group-hover:opacity-100">
-            ▹
-          </span>
-        </>
+        <Link
+          to={item.href}
+          className={`px-6 py-2 font-bricolage text-[11px] uppercase tracking-[0.3em] transition-all duration-300 ${
+            isActive ? "opacity-100" : "opacity-40 hover:opacity-100"
+          }`}
+        >
+          {item.name}
+        </Link>
       ) : (
         <div className="flex flex-col items-center">
           <button
-            className="px-4 py-2 flex gap-1 items-center group-hover:text-yellow-700"
-            onClick={toggleDropdownHandler}
+            className="px-6 py-2 flex gap-2 items-center font-bricolage text-[11px] uppercase tracking-[0.3em] opacity-40 hover:opacity-100 transition-all duration-300"
+            onClick={() => setDropdown(!dropdown)}
           >
             <span>{item.name}</span>
-            <RiArrowDownSLine />
+            <RiArrowDownSLine className={`transition-transform duration-300 ${dropdown ? 'rotate-180' : ''}`} />
           </button>
           <div
             className={`${
               dropdown ? "block" : "hidden"
-            } lg:hidden  transition-all duration-500 pt-4 lg:absolute lg:bottom-0 lg:right-0 lg:transform lg:translate-y-full lg:group-hover:block w-max`}
+            } lg:absolute lg:top-full lg:left-0 lg:mt-4 bg-bone dark:bg-matte-black border-thin p-4 min-w-[220px] z-[60] animate-in fade-in slide-in-from-top-2 duration-300`}
           >
-            <ul className="bg-dark-soft lg:bg-transparent text-center flex flex-col shadow-lg rounded-lg overflow-hidden">
+            <ul className="flex flex-col gap-1">
               {item.items.map((page, index) => (
                 <Link
                   key={index}
                   to={page.href}
-                  className="hover:bg-dark-hard hover:text-white px-4 py-2 text-white lg:text-dark-soft"
+                  className="px-4 py-3 text-[10px] font-ibm uppercase tracking-widest hover:bg-black/5 dark:hover:bg-white/5 transition-colors border-b-thin border-black/5 dark:border-white/5 last:border-0"
                 >
                   {page.title}
                 </Link>
@@ -83,131 +73,110 @@ const Header = () => {
   const userState = useSelector((state) => state.user);
   const [profileDropdown, setprofileDropdown] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return (
-      document.documentElement.classList.contains("dark") ||
-      localStorage.getItem("theme") === "dark"
-    );
+    return document.documentElement.classList.contains("dark") || localStorage.getItem("theme") === "dark";
   });
 
-  const navVisibilityHandler = () => {
-    setNavIsVisible((curState) => {
-      return !curState;
-    });
-  };
-
-  const logoutHandler = () => {
-    dispatch(logout());
-  };
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [isDarkMode]);
 
   const toggleTheme = () => {
-    setIsDarkMode((prevState) => {
-      const nextState = !prevState;
-      if (nextState) {
-        document.documentElement.classList.add("dark");
-        localStorage.setItem("theme", "dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-        localStorage.setItem("theme", "light");
-      }
-      return nextState;
-    });
+    setIsDarkMode(!isDarkMode);
+    localStorage.setItem("theme", !isDarkMode ? "dark" : "light");
   };
 
   return (
-    <section className="sticky top-0 left-0 right-0 z-50  bg-white">
-      <header className="container mx-auto px-5 flex justify-between py-4 items-center">
-        <Link to="/">
-          <img className="w-14 rounded-full" src={images.logo} alt="logo" />
+    <section className="sticky top-0 left-0 right-0 z-50 bg-bone/80 dark:bg-matte-black/80 backdrop-blur-xl border-b-thin border-black/10 dark:border-white/10 transition-all duration-500">
+      <header className="container mx-auto px-6 py-6 flex justify-between items-center">
+        {/* Architectural Logo */}
+        <Link to="/" className="flex items-center gap-4 group">
+          <div className="relative w-10 h-10 border-[1.5px] border-black dark:border-white flex items-center justify-center overflow-hidden">
+             <div className="absolute inset-0 bg-black/10 dark:bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="square" className="relative z-10">
+                <path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z" />
+             </svg>
+          </div>
+          <div className="flex flex-col">
+            <span className="font-syne font-extrabold text-xl leading-none tracking-tighter uppercase">
+              Think<span className="italic-accent font-normal lowercase tracking-normal">Tank</span>
+            </span>
+            <span className="font-geist text-[8px] tracking-[0.4em] uppercase opacity-40">Intelligence Hub</span>
+          </div>
         </Link>
-        <div className="lg:hidden z-50">
-          {navIsVisible ? (
-            <AiOutlineClose
-              className="w-6 h-6"
-              onClick={navVisibilityHandler}
-            />
-          ) : (
-            <AiOutlineMenu className="w-6 h-6" onClick={navVisibilityHandler} />
-          )}
+
+        {/* Mobile Toggle */}
+        <div className="lg:hidden flex items-center gap-6">
+          <button onClick={toggleTheme} className="opacity-40 hover:opacity-100 transition-opacity">
+            {isDarkMode ? <RiSunLine size={18} /> : <RiMoonLine size={18} />}
+          </button>
+          <button onClick={() => setNavIsVisible(!navIsVisible)} className="opacity-40 hover:opacity-100">
+            {navIsVisible ? <AiOutlineClose size={24} /> : <AiOutlineMenu size={24} />}
+          </button>
         </div>
+
+        {/* Desktop Nav */}
         <div
           className={`${
-            navIsVisible ? "right-0" : "-right-full"
-          } transition-all duration-300 mt-[56px] lg:mt-0 bg-dark-hard lg:bg-transparent z-[49] flex flex-col w-full lg:w-auto justify-center lg:justify-end  lg:flex-row fixed top-0 bottom-0  lg:static  gap-x-9 items-center`}
+            navIsVisible ? "translate-x-0" : "translate-x-full lg:translate-x-0"
+          } fixed inset-0 lg:static bg-bone dark:bg-matte-black lg:bg-transparent transition-transform duration-700 flex flex-col lg:flex-row items-center justify-center lg:justify-end gap-12 lg:gap-16 z-40`}
         >
-          <ul className="flex flex-col items-center gap-y-5 text-white lg:text-dark-soft lg:flex-row gap-x-3 font-semibold">
+          <ul className="flex flex-col lg:flex-row items-center gap-10 lg:gap-4">
             {navItemsInfo.map((item) => (
               <NavItem key={item.name} item={item} />
             ))}
           </ul>
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="flex items-center gap-2 rounded-full border border-white/30 px-3 py-2 text-sm font-semibold text-white transition hover:border-white/60 lg:border-dark-light lg:text-dark-soft lg:hover:border-dark-soft"
-            aria-label="Toggle dark mode"
-          >
-            {isDarkMode ? (
-              <RiSunLine className="h-4 w-4" />
-            ) : (
-              <RiMoonLine className="h-4 w-4" />
-            )}
-            <span className="hidden sm:inline">
-              {isDarkMode ? "Light" : "Dark"}
-            </span>
-          </button>
-          {userState.userInfo ? (
-            <div className="flex flex-col items-center gap-y-5 text-white lg:text-dark-soft lg:flex-row gap-x-3 font-semibold">
-              <div className="relative group ">
-                <div className="flex flex-col items-center">
-                  <button
-                    className="py-2 flex gap-1 items-center  border-2 mt-5 lg:mt-0 border-blue-500 px-6 rounded-full text-blue-500 font-semibold hover:bg-blue-500 hover:text-white transition-all duration-300 "
-                    onClick={() => setprofileDropdown(!profileDropdown)}
-                  >
-                    <span>Account</span>
-                    <RiArrowDownSLine />
-                  </button>
-                  <div
-                    className={`${
-                      profileDropdown ? "block" : "hidden"
-                    } lg:hidden  transition-all duration-500 pt-4 lg:absolute lg:bottom-0 lg:right-0 lg:transform lg:translate-y-full lg:group-hover:block w-max`}
-                  >
-                    <ul className="bg-dark-soft lg:bg-transparent text-center flex flex-col shadow-lg rounded-lg overflow-hidden">
-                      {userState?.userInfo?.admin && (
-                        <button
-                          onClick={() => navigate("/admin")}
-                          type="button"
-                          className="hover:bg-dark-hard hover:text-white px-4 py-2 text-white lg:text-dark-soft"
-                        >
-                          Admin Dashboard
-                        </button>
-                      )}
-                      <button
-                        onClick={() => navigate("/profile")}
-                        type="button"
-                        className="hover:bg-dark-hard hover:text-white px-4 py-2 text-white lg:text-dark-soft"
-                      >
-                        Profile Page
-                      </button>
-                      <button
-                        onClick={logoutHandler}
-                        type="button"
-                        className="hover:bg-dark-hard hover:text-white px-4 py-2 text-white lg:text-dark-soft"
-                      >
-                        Logout
-                      </button>
-                    </ul>
+
+          <div className="flex items-center gap-8">
+            <button
+              onClick={toggleTheme}
+              className="hidden lg:block opacity-30 hover:opacity-100 transition-opacity"
+              aria-label="Toggle Theme"
+            >
+              {isDarkMode ? <RiSunLine size={16} /> : <RiMoonLine size={16} />}
+            </button>
+
+            {userState.userInfo ? (
+              <div className="relative">
+                <button
+                  className="flex items-center gap-4 group"
+                  onClick={() => setprofileDropdown(!profileDropdown)}
+                >
+                  <div className="flex flex-col items-end">
+                    <span className="font-ibm text-[9px] tracking-widest uppercase opacity-30">Status: Online</span>
+                    <span className="font-syne font-bold text-xs uppercase tracking-tight">{userState.userInfo.name}</span>
+                  </div>
+                  <div className="w-8 h-8 border-thin border-black/10 dark:border-white/10 overflow-hidden">
+                     <img 
+                      src={userState.userInfo.avatar ? (userState.userInfo.avatar.startsWith("http") ? userState.userInfo.avatar : stables.UPLOAD_FOLDER_BASE_URL + userState.userInfo.avatar) : images.userImage}
+                      alt="Profile"
+                      className="w-full h-full object-cover grayscale"
+                    />
+                  </div>
+                </button>
+                <div className={`${profileDropdown ? 'block' : 'hidden'} absolute top-full right-0 mt-6 bg-bone dark:bg-matte-black border-thin min-w-[240px] z-[70] animate-in fade-in slide-in-from-top-4 duration-500`}>
+                  <div className="flex flex-col p-4">
+                    <span className="font-geist text-[8px] tracking-[0.4em] uppercase opacity-20 mb-4 px-4 block">Security Console</span>
+                    {userState?.userInfo?.admin && (
+                      <button onClick={() => {navigate("/admin"); setprofileDropdown(false)}} className="px-4 py-4 text-[10px] font-ibm uppercase text-left hover:bg-black/5 dark:hover:bg-white/5 border-b-thin border-black/5 dark:border-white/5 transition-colors">Access Dashboard</button>
+                    )}
+                    <button onClick={() => {navigate("/profile"); setprofileDropdown(false)}} className="px-4 py-4 text-[10px] font-ibm uppercase text-left hover:bg-black/5 dark:hover:bg-white/5 border-b-thin border-black/5 dark:border-white/5 transition-colors">User Settings</button>
+                    <button onClick={() => dispatch(logout())} className="px-4 py-4 text-[10px] font-ibm uppercase text-left text-red-500 hover:bg-red-500/10 transition-colors mt-2">Expunge Session</button>
                   </div>
                 </div>
               </div>
-            </div>
-          ) : (
-            <button
-              onClick={() => navigate("/login")}
-              className="border-2 mt-5 lg:mt-0 border-blue-500 px-6 py-2 rounded-full text-blue-500 font-semibold hover:bg-blue-500 hover:text-white transition-all duration-300"
-            >
-              Sign in
-            </button>
-          )}
+            ) : (
+              <Link
+                to="/login"
+                className="px-10 py-3 bg-matte-black dark:bg-bone text-bone dark:text-matte-black font-bricolage text-[11px] uppercase tracking-[0.4em] hover:opacity-80 transition-all border-thin border-transparent"
+              >
+                Enter
+              </Link>
+            )}
+          </div>
         </div>
       </header>
     </section>
@@ -215,3 +184,5 @@ const Header = () => {
 };
 
 export default Header;
+
+

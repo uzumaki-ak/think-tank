@@ -1,16 +1,13 @@
 import React from "react";
 import { BsCheckLg } from "react-icons/bs";
 import { AiOutlineClose } from "react-icons/ai";
-
 import { images, stables } from "../constants";
 import { Link } from "react-router-dom";
 
 const ArticleCard = ({ post, className }) => {
   return (
-    <div
-      className={`rounded-xl overflow-hidden shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px] ${className}`}
-    >
-      <Link to={`/blog/${post.slug}`}>
+    <div className={`group bg-bone dark:bg-matte-black transition-all duration-500 hover:bg-black/5 dark:hover:bg-white/5 ${className}`}>
+      <Link to={`/blog/${post.slug}`} className="block relative overflow-hidden aspect-[4/3]">
         <img
           src={
             post.photo
@@ -19,22 +16,28 @@ const ArticleCard = ({ post, className }) => {
                 : stables.UPLOAD_FOLDER_BASE_URL + post.photo
               : images.samplePostImage
           }
-
-          alt="title"
-          className="w-full object-cover object-center h-auto md:h-52 lg:h-48 xl:h-60"
+          alt={post.title}
+          className="w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
         />
+        <div className="absolute top-4 left-4">
+          <span className="font-geist text-[9px] tracking-[0.3em] uppercase bg-matte-black text-bone px-2 py-1">
+            {post.categories?.[0]?.title || "Editorial"}
+          </span>
+        </div>
       </Link>
-      <div className="p-5">
+      
+      <div className="p-8">
         <Link to={`/blog/${post.slug}`}>
-          <h2 className="font-roboto font-bold text-xl text-dark-soft md:text-2xl lg:text-[28px]">
+          <h2 className="font-syne font-bold text-2xl uppercase leading-tight tracking-tighter mb-4 group-hover:text-matte-black/60 dark:group-hover:text-bone/60 transition-colors">
             {post.title}
           </h2>
-          <p className="text-dark-light mt-3 text-sm md:text-lg">
+          <p className="font-inter text-sm opacity-60 line-clamp-2 mb-8 leading-relaxed">
             {post.caption}
           </p>
         </Link>
-        <div className="flex justify-between flex-nowrap items-center mt-6">
-          <div className="flex items-center gap-x-2 md:gap-x-2.5">
+
+        <div className="flex justify-between items-end pt-6 border-t-[0.5px] border-black/10 dark:border-white/10">
+          <div className="flex items-center gap-x-4">
             <img
               src={
                 post.user?.avatar
@@ -43,41 +46,27 @@ const ArticleCard = ({ post, className }) => {
                     : stables.UPLOAD_FOLDER_BASE_URL + post.user.avatar
                   : images.userImage
               }
-
-              alt="post profile"
-              className="w-9 h-9 md:w-10 md:h-10 rounded-full"
+              alt="author"
+              className="w-8 h-8 rounded-none border-[0.5px] border-black/20 dark:border-white/20 object-cover"
             />
             <div className="flex flex-col">
-              <h4 className="font-bold italic text-dark-soft text-sm md:text-base">
-                {post.user?.name || "Unknown Author"}
+              <span className="font-geist text-[9px] tracking-widest uppercase opacity-40">Contributor</span>
+              <h4 className="font-bricolage text-xs font-semibold uppercase">
+                {post.user?.name || "Anonymous"}
               </h4>
-              <div className="flex items-center gap-x-2">
-                <span
-                  className={`${
-                    post.user?.verified ? "bg-[#36B37E]" : "bg-red-500"
-                  } w-fit bg-opacity-20 p-1.5 rounded-full`}
-                >
-                  {post.user?.verified ? (
-                    <BsCheckLg className="w-1.5 h-1.5 text-[#36B37E]" />
-                  ) : (
-                    <AiOutlineClose className="w-1.5 h-1.5 text-red-500" />
-                  )}
-                </span>
-                <span className="italic text-dark-light text-xs md:text-sm">
-                  {post.user?.verified ? "Verified" : "Unverified"} writer
-                </span>
-              </div>
             </div>
           </div>
-          <span className="font-bold text-dark-light italic text-sm md:text-base">
-            {post.createdAt
-              ? `${new Date(post.createdAt).getDate()} ${new Date(
-                  post.createdAt
-                ).toLocaleString("default", {
-                  month: "long",
-                })}`
-              : "Unknown Date"}
-          </span>
+
+          <div className="text-right">
+            <span className="font-ibm text-[10px] tracking-tight opacity-40">
+              {post.createdAt
+                ? new Date(post.createdAt).toLocaleDateString("en-US", {
+                    month: "short",
+                    year: "numeric",
+                  })
+                : "ND"}
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -85,3 +74,4 @@ const ArticleCard = ({ post, className }) => {
 };
 
 export default ArticleCard;
+

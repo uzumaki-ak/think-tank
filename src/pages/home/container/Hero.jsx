@@ -1,120 +1,57 @@
-import React, { useMemo } from "react";
-import { images } from "../../../constants";
-import Search from "../../../components/Search";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { getAllPosts } from "../../../services/index/posts";
-import { toast } from "react-hot-toast";
+
 const Hero = () => {
   const navigate = useNavigate();
 
-  const { data: postsData, isError } = useQuery({
-    queryFn: () => getAllPosts("", 1, 12),
-    queryKey: ["hero-posts"],
-    onError: (error) => {
-      toast.error(error.message);
-      console.log(error);
-    },
-  });
-
-  const totalPostsCount = postsData?.headers?.["x-totalcount"]
-    ? JSON.parse(postsData.headers["x-totalcount"])
-    : null;
-
-  const popularTags = useMemo(() => {
-    const tagCounts = new Map();
-    (postsData?.data || []).forEach((post) => {
-      (post.tags || []).forEach((tag) => {
-        const normalizedTag = typeof tag === "string" ? tag.trim() : "";
-        if (!normalizedTag) return;
-        tagCounts.set(normalizedTag, (tagCounts.get(normalizedTag) || 0) + 1);
-      });
-    });
-
-    if (tagCounts.size === 0) {
-      (postsData?.data || []).forEach((post) => {
-        (post.categories || []).forEach((category) => {
-          const title = category?.title?.trim();
-          if (!title) return;
-          tagCounts.set(title, (tagCounts.get(title) || 0) + 1);
-        });
-      });
-    }
-
-    return [...tagCounts.entries()]
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 6)
-      .map(([tag]) => tag);
-  }, [postsData]);
-
-  const handleSearch = ({ SearchKeyboard }) => {
-    const searchValue = SearchKeyboard?.trim();
-    if (searchValue) {
-      navigate(
-        `/blog?search=${encodeURIComponent(searchValue)}&page=1`
-      );
-      return;
-    }
-    navigate("/blog?page=1");
-  };
-
-  const handleTagClick = (tag) => {
-    navigate(`/blog?search=${encodeURIComponent(tag)}&page=1`);
-  };
-
   return (
-    <section className="container mx-auto px-5 py-10 lg:py-16">
-      <div className="grid items-center gap-10 lg:grid-cols-2">
-        <div className="max-w-xl text-center lg:text-left">
-          <h1 className="font-rob text-3xl font-bold text-dark-soft md:text-5xl lg:text-4xl xl:text-5xl">
-            Discover stories worth your time
-          </h1>
-        <p className="text-dark-light mt-4 md:text-xl lg:text-base xl:text-xl">
-          {totalPostsCount !== null
-            ? `Explore ${totalPostsCount} posts on product, design, engineering, and creator journeys. Find fresh ideas, practical guides, and honest lessons in every read.`
-            : "Explore posts on product, design, engineering, and creator journeys. Find fresh ideas, practical guides, and honest lessons in every read."}
-        </p>
-        <Search
-          className="mt-8 lg:mt-6 xl:mt-8"
-          onSearchKeyboard={handleSearch}
-        />
+    <section className="relative overflow-hidden bg-bone dark:bg-matte-black pt-20 pb-32 lg:pt-32 lg:pb-48 transition-colors duration-500">
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
+          
+          <div className="mb-8 flex items-center gap-4">
+            <span className="w-12 h-[1px] bg-black/20 dark:bg-white/20"></span>
+            <span className="font-geist text-[10px] tracking-[0.4em] uppercase opacity-60">Volume 01 / Issue 04</span>
+          </div>
 
-        <div className="mt-6 flex flex-col items-center gap-3 lg:mt-8 lg:flex-row lg:items-start">
-          <span className="text-dark-light font-semibold italic lg:text-sm xl:text-base">
-            Popular Tags:
-          </span>
-          {isError ? (
-            <span className="text-sm text-red-600">Unable to load tags</span>
-          ) : popularTags.length === 0 ? (
-            <span className="text-sm text-dark-light">No tags yet</span>
-          ) : (
-            <ul className="flex flex-wrap justify-center gap-2 lg:justify-start lg:text-sm xl:text-base">
-              {popularTags.map((tag) => (
-                <li key={tag}>
-                  <button
-                    type="button"
-                    onClick={() => handleTagClick(tag)}
-                    className="rounded-lg bg-primary bg-opacity-10 px-2 py-1.5 text-primary font-semibold"
-                  >
-                    {tag}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
+          <h1 className="font-syne font-extrabold text-5xl md:text-7xl lg:text-8xl xl:text-9xl leading-[0.9] tracking-tighter uppercase mb-12 max-w-5xl">
+            Think <br />
+            <span className="italic-accent lowercase tracking-normal text-matte-black/40 dark:text-bone/30 block lg:inline lg:ml-20">Tank</span> <br />
+            Intelligence.
+          </h1>
+
+          <div className="max-w-xl mb-16">
+            <p className="font-inter text-lg md:text-xl opacity-70 leading-relaxed tracking-tight">
+              A premium archive of curated thoughts on design, engineering, and the human condition. Precision-built for the inquisitive mind.
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+            <button 
+              onClick={() => navigate("/blog")}
+              className="px-12 py-5 bg-matte-black dark:bg-bone text-bone dark:text-matte-black font-bricolage text-sm uppercase tracking-[0.2em] cta-invert border-thin"
+            >
+              Explore Archive
+            </button>
+            <button 
+              onClick={() => navigate("/about")}
+              className="px-12 py-5 border-thin font-bricolage text-sm uppercase tracking-[0.2em] hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+            >
+              The Vision
+            </button>
+          </div>
         </div>
       </div>
-        {/* rightimage  */}
-        <div className="hidden lg:flex lg:justify-end">
-          <img
-            className="w-full max-w-xl"
-            src={images.HeroImage3}
-            alt="users are reading articles"
-          />
-        </div>
+
+      {/* Monochromatic Pulse Visualizer */}
+      <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/3 w-[600px] h-[600px] pointer-events-none opacity-20 dark:opacity-30 hidden lg:block">
+        <div className="w-full h-full rounded-full bg-black dark:bg-white blur-[120px] animate-pulse scale-90 mix-blend-difference"></div>
       </div>
+
+      <div className="absolute bottom-0 left-0 w-full h-[0.5px] bg-black/10 dark:border-white/10"></div>
     </section>
   );
 };
 
 export default Hero;
+

@@ -1,8 +1,6 @@
 import { stables } from "../../../../constants";
 import { images } from "../../../../constants";
-
 import { deletePost, getAllPosts } from "../../../../services/index/posts";
-import Pagination from "../../../../components/Pagination";
 import { Link } from "react-router-dom";
 import { useDataTable } from "../../../../hooks/useDataTable";
 import DataTable from "../../components/DataTable";
@@ -16,7 +14,6 @@ const ManagePost = () => {
     isLoading,
     isFetching,
     isLoadingDeleteData,
-    queryClient,
     searchKeyboardHandler,
     submitSearchKeyboardHandler,
     deleteDataHandler,
@@ -26,21 +23,19 @@ const ManagePost = () => {
     dataQueryKey: "posts",
     deleteDataMessage: "post deleted successfully",
     mutateDeleteFn: ({ slug, token }) => {
-      return deletePost({
-        slug,
-        token,
-      });
+      return deletePost({ slug, token });
     },
   });
+
   return (
     <DataTable
-      pageTitle="Manage Posts"
-      dalaListName="Posts"
-      searchInputPlaceholder="Post title..."
+      pageTitle="Release Management"
+      dalaListName="Archive Inventory"
+      searchInputPlaceholder="Search by title..."
       searchKeyboardOnSubmitHandler={submitSearchKeyboardHandler}
       searchkeyboardOnChangeHandler={searchKeyboardHandler}
       searchKeyboard={searchKeyboard}
-      tableHeaderTitleList={["Title", "Category", "Created At", "Tags", ""]}
+      tableHeaderTitleList={["Archive / Title", "Category", "Release Date", "Views", "Operations"]}
       isLoading={isLoading}
       isFetching={isFetching}
       data={postsData?.data}
@@ -50,84 +45,53 @@ const ManagePost = () => {
       userState={userState}
     >
       {postsData?.data.map((post) => (
-        <tr>
-          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <a href="/" className="relative block">
-                  <img
-                    src={
-                      post?.photo
-                        ? stables.UPLOAD_FOLDER_BASE_URL + post?.photo
-                        : images.samplePostImage
-                    }
-                    alt={post.title}
-                    className="mx-auto object-cover rounded-lg w-10 aspect-square"
-                  />
-                </a>
-              </div>
-              <div className="ml-3">
-                <p className="text-gray-900 whitespace-no-wrap">{post.title}</p>
+        <tr key={post._id} className="hover:bg-black/5 dark:hover:bg-white/5 transition-colors group">
+          <td className="px-8 py-6 border-b-[0.5px] border-black/10 dark:border-white/10">
+            <div className="flex items-center gap-6">
+              <img
+                src={post?.photo ? (post.photo.startsWith("http") ? post.photo : stables.UPLOAD_FOLDER_BASE_URL + post.photo) : images.samplePostImage}
+                alt={post.title}
+                className="w-12 h-12 object-cover border-thin grayscale group-hover:grayscale-0 transition-all"
+              />
+              <div>
+                <p className="font-syne font-bold text-sm uppercase tracking-tight">{post.title}</p>
+                <span className="font-ibm text-[9px] opacity-30 uppercase">{post.slug}</span>
               </div>
             </div>
           </td>
-          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-            <p className="text-gray-900 whitespace-no-wrap">
-              {post.categories.length > 0
-                ? post.categories
-                    .slice(0, 3)
-                    .map(
-                      (category, index) =>
-                        `${category.title}${
-                          post.categories.slice(0, 3).length === index + 1
-                            ? ""
-                            : ", "
-                        }`
-                    )
-                : "Uncategorized"}
-            </p>
+          <td className="px-8 py-6 border-b-[0.5px] border-black/10 dark:border-white/10">
+            <span className="font-bricolage text-xs uppercase tracking-widest opacity-60">
+              {post.categories.length > 0 ? post.categories[0].title : "Uncategorized"}
+            </span>
           </td>
-          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-            <p className="text-gray-900 whitespace-no-wrap">
+          <td className="px-8 py-6 border-b-[0.5px] border-black/10 dark:border-white/10">
+            <span className="font-ibm text-xs opacity-60">
               {new Date(post.createdAt).toLocaleDateString("en-US", {
-                day: "numeric",
+                day: "2-digit",
                 month: "short",
                 year: "numeric",
               })}
-            </p>
+            </span>
           </td>
-          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-            <div className="flex gap-x-2">
-              {post.tags.length > 0
-                ? post.tags.map((tag, index) => (
-                    <p>
-                      {tag}
-                      {post.tags.length - 1 !== index && ","}
-                    </p>
-                  ))
-                : "No tags"}
+          <td className="px-8 py-6 border-b-[0.5px] border-black/10 dark:border-white/10 text-center">
+            <span className="font-ibm text-xs font-bold">{post.views || 0}</span>
+          </td>
+          <td className="px-8 py-6 border-b-[0.5px] border-black/10 dark:border-white/10">
+            <div className="flex gap-6 items-center">
+              <Link
+                to={`/admin/posts/manage/edit/${post?.slug}`}
+                className="font-geist text-[10px] tracking-widest uppercase hover:opacity-50 transition-opacity"
+              >
+                [Edit]
+              </Link>
+              <button
+                disabled={isLoadingDeleteData}
+                className="font-geist text-[10px] tracking-widest uppercase text-red-500 hover:text-red-700 disabled:opacity-20 transition-colors"
+                onClick={() => deleteDataHandler({ slug: post?.slug, token: userState.userInfo.token })}
+              >
+                [Delete]
+              </button>
             </div>
-          </td>
-          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200 space-x-5">
-            <button
-              disabled={isLoadingDeleteData}
-              type="button"
-              className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed"
-              onClick={() => {
-                deleteDataHandler({
-                  slug: post?.slug,
-                  token: userState.userInfo.token,
-                });
-              }}
-            >
-              Delete
-            </button>
-            <Link
-              to={`/admin/posts/manage/edit/${post?.slug}`}
-              className="text-green-600 hover:text-green-900"
-            >
-              Edit
-            </Link>
           </td>
         </tr>
       ))}
@@ -136,3 +100,4 @@ const ManagePost = () => {
 };
 
 export default ManagePost;
+

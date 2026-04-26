@@ -1,10 +1,6 @@
 import React from "react";
 import { useDataTable } from "../../../../hooks/useDataTable";
-import {
-  deleteUser,
-  getAllUsers,
-  updateProfile,
-} from "../../../../services/index/users";
+import { deleteUser, getAllUsers, updateProfile } from "../../../../services/index/users";
 import DataTable from "../../components/DataTable";
 import { images, stables } from "../../../../constants";
 import { useMutation } from "@tanstack/react-query";
@@ -25,68 +21,46 @@ const Users = () => {
     deleteDataHandler,
     setCurrentPage,
   } = useDataTable({
-    dataQueryFn: () =>
-      getAllUsers(userState.userInfo.token, searchKeyboard, currentPage),
+    dataQueryFn: () => getAllUsers(userState.userInfo.token, searchKeyboard, currentPage),
     dataQueryKey: "users",
-    deleteDataMessage: "user deleted successfully",
+    deleteDataMessage: "USER RECORD REMOVED",
     mutateDeleteFn: ({ slug, token }) => {
-      return deleteUser({
-        slug,
-        token,
-      });
+      return deleteUser({ slug, token });
     },
   });
 
-  const { mutate: mutateUpdateUser, isLoading: isLoadingUpdateUser } =
-    useMutation({
-      mutationFn: ({ isAdmin, userId }) => {
-        return updateProfile({
-          token: userState.userInfo.token,
-          userData: { admin: isAdmin },
-          userId,
-        });
-      },
-      onSuccess: (data) => {
-        // setInitialPhoto(data.photo);
-        queryClient.invalidateQueries(["users"]);
-        toast.success("user updated successfully");
-      },
-      onError: (error) => {
-        toast.error(error.message);
-        console.log(error);
-      },
-    });
+  const { mutate: mutateUpdateUser, isLoading: isLoadingUpdateUser } = useMutation({
+    mutationFn: ({ isAdmin, userId }) => {
+      return updateProfile({
+        token: userState.userInfo.token,
+        userData: { admin: isAdmin },
+        userId,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["users"]);
+      toast.success("PERMISSION LEVEL UPDATED");
+    },
+    onError: (error) => toast.error(error.message),
+  });
 
   const handleAdminCheck = (event, userId) => {
-
-    const initialCheckValue = !event.target.checked;
-
-    // console.log("Checkbox changed for userId:", userId);
-    // console.log("Event checked status:", event.target.checked);
-    if (window.confirm("Are you sure you want to change admin status?")) {
+    if (window.confirm("CONFIRM PERMISSION ESCALATION / DE-ESCALATION?")) {
       mutateUpdateUser({ isAdmin: event.target.checked, userId });
     } else {
-      event.target.checked = initialCheckValue;
+      event.target.checked = !event.target.checked;
     }
   };
 
   return (
     <DataTable
-      pageTitle="Manage Users"
-      dalaListName="Users"
-      searchInputPlaceholder="User's email..."
+      pageTitle="Network Nodes"
+      dalaListName="User Directory"
+      searchInputPlaceholder="Identification / Email..."
       searchKeyboardOnSubmitHandler={submitSearchKeyboardHandler}
       searchkeyboardOnChangeHandler={searchKeyboardHandler}
       searchKeyboard={searchKeyboard}
-      tableHeaderTitleList={[
-        "Name",
-        "Email",
-
-        "Created At",
-        "isVerified",
-        "isAdmin",
-        "",
-      ]}
+      tableHeaderTitleList={["Identity", "Identification", "Establishment", "Status", "Privilege", "Action"]}
       isLoading={isLoading}
       isFetching={isFetching}
       data={usersData?.data}
@@ -96,67 +70,50 @@ const Users = () => {
       userState={userState}
     >
       {usersData?.data.map((user) => (
-        <tr key={user._id}>
-          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <a href="/" className="relative block">
-                  <img
-                    src={
-                      user?.avatar
-                        ? stables.UPLOAD_FOLDER_BASE_URL + user?.avatar
-                        : images.userImage
-                    }
-                    alt={user.name}
-                    className="mx-auto object-cover rounded-lg w-8 aspect-square"
-                  />
-                </a>
-              </div>
-              <div className="ml-3">
-                <p className="text-gray-900 whitespace-no-wrap">{user.name}</p>
-              </div>
+        <tr key={user._id} className="hover:bg-black/5 dark:hover:bg-white/5 transition-colors group">
+          <td className="px-8 py-6 border-b-[0.5px] border-black/10 dark:border-white/10">
+            <div className="flex items-center gap-6">
+              <img
+                src={user?.avatar ? (user.avatar.startsWith("http") ? user.avatar : stables.UPLOAD_FOLDER_BASE_URL + user.avatar) : images.userImage}
+                alt={user.name}
+                className="w-10 h-10 object-cover border-thin grayscale group-hover:grayscale-0 transition-all"
+              />
+              <span className="font-syne font-bold text-sm uppercase tracking-tight">{user.name}</span>
             </div>
           </td>
-          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-            <p className="text-gray-900 whitespace-no-wrap">{user.email}</p>
+          <td className="px-8 py-6 border-b-[0.5px] border-black/10 dark:border-white/10">
+            <span className="font-ibm text-xs opacity-60 lowercase tracking-tight">{user.email}</span>
           </td>
-          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-            <p className="text-gray-900 whitespace-no-wrap">
+          <td className="px-8 py-6 border-b-[0.5px] border-black/10 dark:border-white/10">
+            <span className="font-ibm text-xs opacity-60">
               {new Date(user.createdAt).toLocaleDateString("en-US", {
-                day: "numeric",
+                day: "2-digit",
                 month: "short",
                 year: "numeric",
               })}
-            </p>
+            </span>
           </td>
-          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-            <p className="text-gray-900 whitespace-no-wrap">
-              {user.verified ? "✅" : "❌"}
-            </p>
+          <td className="px-8 py-6 border-b-[0.5px] border-black/10 dark:border-white/10">
+            <span className={`font-geist text-[9px] tracking-widest uppercase ${user.verified ? "text-green-500" : "text-red-500"}`}>
+              {user.verified ? "[VERIFIED]" : "[UNVERIFIED]"}
+            </span>
           </td>
-
-          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+          <td className="px-8 py-6 border-b-[0.5px] border-black/10 dark:border-white/10">
             <input
               type="checkbox"
-              className="d-checkbox disabled:bg-orange-700 opacity-100 checked:bg-green-600 bg-cover checked:disabled:bg-none"
+              className="w-4 h-4 rounded-none accent-matte-black dark:accent-bone transition-all"
               defaultChecked={user.admin}
               onChange={(event) => handleAdminCheck(event, user._id)}
               disabled={isLoadingUpdateUser}
             />
           </td>
-          <td className="px-5 py-5 text-sm bg-white border-b border-gray-200 space-x-5">
+          <td className="px-8 py-6 border-b-[0.5px] border-black/10 dark:border-white/10">
             <button
               disabled={isLoadingDeleteData}
-              type="button"
-              className="text-red-600 hover:text-red-900 disabled:opacity-70 disabled:cursor-not-allowed"
-              onClick={() => {
-                deleteDataHandler({
-                  slug: user?._id,
-                  token: userState.userInfo.token,
-                });
-              }}
+              className="font-geist text-[10px] tracking-widest uppercase text-red-500 hover:text-red-700 disabled:opacity-20 transition-colors"
+              onClick={() => deleteDataHandler({ slug: user?._id, token: userState.userInfo.token })}
             >
-              Delete
+              [TERMINATE]
             </button>
           </td>
         </tr>
@@ -166,3 +123,4 @@ const Users = () => {
 };
 
 export default Users;
+

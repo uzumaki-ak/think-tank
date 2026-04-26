@@ -4,26 +4,24 @@ import { NavLink } from "react-router-dom";
 const NavItem = ({
   link,
   title,
-  icon,
   name,
   activeNavName,
   setActiveNavName,
 }) => {
   return (
     <NavLink
-    to={link}
-    className={`${
-      name === activeNavName
-        ? "font-bold text-primary"
-        : "font-semibold text-[#A5A5A5]"
-    } flex items-center gap-x-2 py-2 text-lg whitespace-nowrap`} 
-    onClick={() => setActiveNavName(name)}
-  >
-    {icon}
-    {title}
-  </NavLink>
-  
+      to={link}
+      className={`${
+        name === activeNavName
+          ? "opacity-100"
+          : "opacity-40 hover:opacity-60"
+      } flex items-center py-2 font-bricolage text-sm uppercase tracking-[0.2em] transition-all whitespace-nowrap`} 
+      onClick={() => setActiveNavName(name)}
+    >
+      {title}
+    </NavLink>
   );
 };
 
 export default NavItem;
+

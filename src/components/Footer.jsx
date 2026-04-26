@@ -1,138 +1,90 @@
 import React from "react";
-import { images } from "../constants";
-import {
-  AiFillFacebook,
-  AiFillHeart,
-  AiFillInstagram,
-  AiFillLinkedin,
-  AiFillTwitterCircle,
-  AiFillYoutube,
-} from "react-icons/ai";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <section className="bg-dark-hard ">
-      <footer className="container mx-auto grid grid-cols-10 px-5 py-10 gap-y-10 gap-x-5 md:pt-20 md:grid-cols-12 lg:grid-cols-10 lg:gap-x-10 ">
-        <div className=" col-span-5 md:col-span-4 lg:col-span-2  ">
-          <h3 className="text-dark-light font-bold md:text-lg">Products</h3>
-          <ul className="text-[#959Ead] text-sm mt-5 space-y-4 md:text-base">
-            <li>
-              <a href="/">Landing Page</a>
-            </li>
-            <li>
-              <a href="/">Features</a>
-            </li>
-            <li>
-              <a href="/">Documentatiom</a>
-            </li>
-            <li>
-              <a href="/">Referral Program</a>
-            </li>
-            <li>
-              <a href="/">Pricing</a>
-            </li>
-          </ul>
-        </div>
-        <div className=" col-span-5 md:col-span-4 lg:col-span-2 ">
-          <h3 className="text-dark-light font-bold md:text-lg">Services</h3>
-          <ul className="text-[#959Ead] text-sm mt-5 space-y-4 md:text-base">
-            <li>
-              <a href="/">Landing Page</a>
-            </li>
-            <li>
-              <a href="/">Features</a>
-            </li>
-            <li>
-              <a href="/">Documentatiom</a>
-            </li>
-            <li>
-              <a href="/">Referral Program</a>
-            </li>
-            <li>
-              <a href="/">Pricing</a>
-            </li>
-          </ul>
-        </div>
-        <div className=" col-span-5 md:col-span-4 md:col-start-5 lg:col-span-2 lg:col-start-auto">
-          <h3 className="text-dark-light font-bold md:text-lg">Company</h3>
-          <ul className="text-[#959Ead] text-sm mt-5 space-y-4 md:text-base">
-            <li>
-              <a href="/">Landing Page</a>
-            </li>
-            <li>
-              <a href="/">Features</a>
-            </li>
-            <li>
-              <a href="/">Documentatiom</a>
-            </li>
-            <li>
-              <a href="/">Referral Program</a>
-            </li>
-            <li>
-              <a href="/">Pricing</a>
-            </li>
-          </ul>
-        </div>
-        <div className=" col-span-5 md:col-span-4 lg:col-span-2 ">
-          <h3 className="text-dark-light font-bold md:text-lg">More</h3>
-          <ul className="text-[#959Ead] text-sm mt-5 space-y-4 md:text-base">
-            <li>
-              <a href="/">Landing Page</a>
-            </li>
-            <li>
-              <a href="/">Features</a>
-            </li>
-            <li>
-              <a href="/">Documentatiom</a>
-            </li>
-            <li>
-              <a href="/">Referral Program</a>
-            </li>
-            <li>
-              <a href="/">Pricing</a>
-            </li>
-          </ul>
-        </div>
-        <div className="col-span-10 md:order-first md:col-span-4 lg:col-span-2 ">
-          <img src={images.logo} alt="logo" className="w-10 h-10 mx-auto md:mx-0 " />
-          <p className="text-sm text-dark-light text-center mt-4 md:text-left md:text-base lg:text-sm">Build a modern and creative website with Aka AK</p>
-          <ul className="flex justify-center items-center mt-5  space-x-4 text-gray-300 md:justify-start">
-            <li>
-              <a href="/">
-                <AiFillTwitterCircle className="w-6 h-auto" />
-              </a>
-            </li>
-            <li>
-              <a href="/">
-                <AiFillYoutube className="w-6 h-auto" />
-              </a>
-            </li>
-            <li>
-              <a href="/">
-                <AiFillInstagram className="w-6 h-auto" />
-              </a>
-            </li>
-            <li>
-              <a href="/">
-                <AiFillFacebook className="w-6 h-auto" />
-              </a>
-            </li>
-            <li>
-              <a href="/">
-                <AiFillLinkedin className="w-6 h-auto" />
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div className="hidden md:flex flex-col items-center space-y-4 md:col-span-12 lg:col-span-10">
-          <div className="bg-primary text-white p-3 rounded-full">
-            <AiFillHeart className="w-7 h-auto" />
+    <section className="bg-bone dark:bg-matte-black pt-24 transition-colors duration-500 border-t-thin border-black/10 dark:border-white/10">
+      <footer className="container mx-auto px-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 pb-20">
+          
+          <div className="col-span-2 lg:col-span-1">
+            <Link to="/" className="font-syne font-extrabold text-xl tracking-tighter mb-6 block">
+              THINK<span className="italic-accent font-normal lowercase tracking-normal">Tank</span>
+            </Link>
+            <p className="font-inter text-xs opacity-40 leading-relaxed max-w-[200px]">
+              Precision-built archival intelligence for the inquisitive mind. Operating at the intersection of design and logic.
+            </p>
           </div>
-          <p className="font-bold italic text-dark-light ">Copyrigt © 2024, made with hatred</p>
+
+          <div>
+            <h3 className="font-geist text-[10px] tracking-[0.3em] uppercase opacity-40 mb-8">Navigation</h3>
+            <ul className="flex flex-col gap-4">
+              {["Archive", "Edition", "Access", "Connect"].map((item) => (
+                <li key={item}>
+                  <a href="/" className="font-bricolage text-sm uppercase tracking-widest hover:-translate-y-0.5 transition-transform block">
+                    {item}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-geist text-[10px] tracking-[0.3em] uppercase opacity-40 mb-8">Resources</h3>
+            <ul className="flex flex-col gap-4">
+              {["Documentation", "Manifesto", "Protocols", "Intelligence"].map((item) => (
+                <li key={item}>
+                  <a href="/" className="font-bricolage text-sm uppercase tracking-widest hover:-translate-y-0.5 transition-transform block">
+                    {item}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-geist text-[10px] tracking-[0.3em] uppercase opacity-40 mb-8">System</h3>
+            <div className="flex items-center gap-3">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+              </span>
+              <span className="font-ibm text-[10px] tracking-tight opacity-60 uppercase">Status: Optimized</span>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Marquee Strip */}
+        <div className="border-t-thin border-black/10 dark:border-white/10 py-6 overflow-hidden relative">
+          <div className="flex whitespace-nowrap animate-marquee">
+            <span className="font-geist text-[10px] tracking-[0.4em] uppercase opacity-40 px-4">
+              BUILT FOR THE FUTURE OF EDUCATION • OPERATING ON GROQ L3 • DESIGNED FOR EMPATHY • ARCHIVAL INTELLIGENCE • 
+            </span>
+            <span className="font-geist text-[10px] tracking-[0.4em] uppercase opacity-40 px-4">
+              BUILT FOR THE FUTURE OF EDUCATION • OPERATING ON GROQ L3 • DESIGNED FOR EMPATHY • ARCHIVAL INTELLIGENCE • 
+            </span>
+          </div>
+        </div>
+
+        <div className="py-8 flex justify-between items-center opacity-20">
+          <span className="font-ibm text-[8px] tracking-widest uppercase">© 2026 THINK TANK EDITORIAL</span>
+          <span className="font-ibm text-[8px] tracking-widest uppercase">DESIGNED FOR DISCIPLINE</span>
         </div>
       </footer>
+      
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+          animation: marquee 30s linear infinite;
+        }
+      `}} />
     </section>
   );
 };
 
 export default Footer;
+

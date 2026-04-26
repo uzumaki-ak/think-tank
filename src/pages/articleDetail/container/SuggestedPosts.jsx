@@ -2,36 +2,38 @@ import React from "react";
 import { images, stables } from "../../../constants";
 import { Link } from "react-router-dom";
 
-const SuggestedPosts = ({ className, header, posts = [], tags }) => {
+const SuggestedPosts = ({ className, header, posts = [], tags = [] }) => {
   return (
-    <div
-      className={`w-full shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px] rounded-lg p-4 ${className}`}
-    >
-      <h2 className="font-rob font-medium text-dark-hard md:text-xl ">
+    <div className={`${className} bg-transparent`}>
+      <h2 className="font-syne font-bold text-lg uppercase tracking-tighter mb-8 pb-4 border-b-thin border-black/10 dark:border-white/10">
         {header}
       </h2>
-      <div className="grid gap-y-5 mt-5 md:grid-cols-2 md:gap-x-5 lg:grid-cols-1">
-        {posts.map((item) => (
+      <div className="grid gap-y-8 mt-5">
+        {posts.slice(0, 4).map((item) => (
           <div
             key={item._id}
-            className="flex space-x-3 flex-nowrap items-center"
+            className="flex gap-4 items-center group transition-all"
           >
             <img
-              className="aspect-square object-cover rounded-lg w-1/5"
+              className="w-16 h-16 object-cover border-thin grayscale group-hover:grayscale-0 transition-all duration-500"
               src={
                 item?.photo
-                  ? stables.UPLOAD_FOLDER_BASE_URL + item?.photo
+                  ? item.photo.startsWith("http")
+                    ? item.photo
+                    : stables.UPLOAD_FOLDER_BASE_URL + item.photo
                   : images.samplePostImage
               }
               alt={item.title}
             />
-            <div className="text-sm font-rob text-dark-hard font-medium">
-              <h3 className="text-sm font-rob text-dark-hard font-medium md:text-base lg:text-lg">
-                <Link to={`/blog/${item.slug}`}>{item.title}</Link>
+            <div className="flex-1">
+              <h3 className="font-syne font-bold text-sm uppercase tracking-tight leading-tight mb-1">
+                <Link to={`/blog/${item.slug}`} className="hover:opacity-60 transition-opacity">
+                  {item.title}
+                </Link>
               </h3>
-              <span className="text-xs opacity-60">
-                {new Date(item.createdAt).toLocaleDateString("en-IN", {
-                  day: "numeric",
+              <span className="font-ibm text-[9px] tracking-widest uppercase opacity-40">
+                {new Date(item.createdAt).toLocaleDateString("en-US", {
+                  day: "2-digit",
                   month: "short",
                   year: "numeric",
                 })}
@@ -40,18 +42,19 @@ const SuggestedPosts = ({ className, header, posts = [], tags }) => {
           </div>
         ))}
       </div>
-      <h2 className="font-rob font-medium text-dark-hard mt-8 md:text-xl">
-        Tags
+
+      <h2 className="font-syne font-bold text-lg uppercase tracking-tighter mt-16 mb-8 pb-4 border-b-thin border-black/10 dark:border-white/10">
+        Index / Tags
       </h2>
-      {tags.length === 0 ? (
-        <p className="text-slate-500 text-xs mt-2">No tags for this post</p>
+      {!tags || tags.length === 0 ? (
+        <p className="font-ibm text-[10px] tracking-widest uppercase opacity-20">NO TAGS DETECTED</p>
       ) : (
-        <div className="flex flex-wrap gap-x-2 gap-y-2 mt-4">
+        <div className="flex flex-wrap gap-2">
           {tags.map((item, index) => (
             <Link
               key={index}
               to="/"
-              className="inline-block rounded-md px-3 py-1.5 bg-primary font-rob text-xs text-white md:text-sm"
+              className="font-geist text-[9px] tracking-widest uppercase border-thin border-black/10 dark:border-white/10 px-4 py-2 hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-all"
             >
               {item}
             </Link>
@@ -63,3 +66,4 @@ const SuggestedPosts = ({ className, header, posts = [], tags }) => {
 };
 
 export default SuggestedPosts;
+

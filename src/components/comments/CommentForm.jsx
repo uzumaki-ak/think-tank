@@ -14,35 +14,39 @@ const CommentForm = ({
     formSubmitHandler(value);
     setValue("");
   };
+
   return (
-    <form onSubmit={submitHandler}>
-      <div
-        className="flex  flex-col items-end
-       border  border-primary rounded-lg p-4"
-      >
+    <form onSubmit={submitHandler} className="w-full">
+      <div className="flex flex-col border-thin border-black/10 dark:border-white/10 p-6 bg-transparent transition-all focus-within:border-black/30 dark:focus-within:border-white/30">
         <textarea
-          className="w-full focus:outline-none bg-transparent"
-          rows="5"
-          placeholder="Leave your comment here.."
+          className="w-full focus:outline-none bg-transparent font-inter text-sm opacity-80 leading-relaxed placeholder:opacity-20"
+          rows="4"
+          placeholder="ENTER TRANSMISSION CONTENT..."
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={(e) => e.target.value.length <= 1000 && setValue(e.target.value)}
         />
-        <div className="flex  flex-col-reverse gap-y-2 items-center  gap-x-2 pt-2 min-[420px]:flex-row ">
-          {formCancelHandler && (
+        <div className="flex flex-col-reverse sm:flex-row justify-between items-center gap-4 mt-8 pt-6 border-t-thin border-black/5 dark:border-white/5">
+          <div className="font-ibm text-[9px] tracking-widest uppercase opacity-20">
+            Char Count: {value.length}/1000
+          </div>
+          <div className="flex gap-4 w-full sm:w-auto">
+            {formCancelHandler && (
+              <button
+                type="button"
+                onClick={formCancelHandler}
+                className="flex-1 sm:flex-none px-8 py-3 border-thin border-red-500/30 text-red-500 font-bricolage text-[10px] tracking-widest uppercase hover:bg-red-500 hover:text-white transition-all"
+              >
+                ABORT
+              </button>
+            )}
             <button
-              onClick={formCancelHandler}
-              className="px-6 py-2.5 rounded-lg border border-red-500 text-red-500"
+              disabled={loading || value.length === 0}
+              type="submit"
+              className="flex-1 sm:flex-none px-10 py-3 bg-matte-black text-bone dark:bg-bone dark:text-matte-black font-bricolage text-[10px] tracking-widest uppercase hover:opacity-80 disabled:opacity-20 transition-all"
             >
-              Cancel
+              {loading ? "TRANSMITTING..." : btnLable || "TRANSMIT"}
             </button>
-          )}
-          <button
-            disabled={loading}
-            type="submit"
-            className="px-6 py-2.5 rounded-lg bg-primary text-white font-semibold disabled:opacity-70 disabled:cursor-not-allowed"
-          >
-            {btnLable}
-          </button>
+          </div>
         </div>
       </div>
     </form>
@@ -50,3 +54,4 @@ const CommentForm = ({
 };
 
 export default CommentForm;
+

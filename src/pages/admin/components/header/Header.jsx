@@ -1,17 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useWindowSize } from "@uidotdev/usehooks";
-
-import { images } from "../../../../constants";
-import {
-  AiFillDashboard,
-  AiOutlineClose,
-  AiOutlineMenu,
-  AiOutlineKey,
-} from "react-icons/ai";
-import { FaComments, FaUser } from "react-icons/fa6";
-import { MdDashboard } from "react-icons/md";
 import { RiMoonLine, RiSunLine } from "react-icons/ri";
+import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import NavItem from "./NavItem";
 import NavItemCollapse from "./NavItemCollapse";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -28,157 +19,113 @@ const Header = () => {
   const windowSize = useWindowSize();
   const [isDarkMode, setIsDarkMode] = useState(() => {
     if (typeof window === "undefined") return false;
-    return (
-      document.documentElement.classList.contains("dark") ||
-      localStorage.getItem("theme") === "dark"
-    );
+    return document.documentElement.classList.contains("dark") || localStorage.getItem("theme") === "dark";
   });
 
-  const { mutate: mutateCreatePost, isloading: isLoadingCreatePost } =
-    useMutation({
-      mutationFn: ({ slug, token }) => {
-        return createPost({
-          token,
-        });
-      },
-      onSuccess: (data) => {
-        queryClient.invalidateQueries(["posts"]);
-        toast.success("Post created :>, edit that now");
-       navigate(`/admin/posts/manage/edit/${data.slug}`)
-      },
-      onError: (error) => {
-        toast.error(error.message);
+  const { mutate: mutateCreatePost, isLoading: isLoadingCreatePost } = useMutation({
+    mutationFn: ({ token }) => createPost({ token }),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(["posts"]);
+      toast.success("ENTRY CREATED / PROCEED TO EDIT");
+      navigate(`/admin/posts/manage/edit/${data.slug}`);
+    },
+    onError: (error) => toast.error(error.message),
+  });
 
-        console.log(error);
-      },
-    });
-
-  const toggleMenuHandler = () => {
-    setIsMenuActive((prevState) => !prevState);
-  };
+  const toggleMenuHandler = () => setIsMenuActive((prev) => !prev);
 
   useEffect(() => {
-    if (windowSize.width < 1024) {
-      setIsMenuActive(false);
-    } else {
-      setIsMenuActive(true);
-    }
+    setIsMenuActive(windowSize.width >= 1024);
   }, [windowSize.width]);
 
-  const handleCreateNewPost = ({ token }) => {
-    mutateCreatePost({ token });
-  };
-
   const toggleTheme = () => {
-    setIsDarkMode((prevState) => {
-      const nextState = !prevState;
-      if (nextState) {
-        document.documentElement.classList.add("dark");
-        localStorage.setItem("theme", "dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-        localStorage.setItem("theme", "light");
-      }
-      return nextState;
+    setIsDarkMode((prev) => {
+      const next = !prev;
+      document.documentElement.classList.toggle("dark", next);
+      localStorage.setItem("theme", next ? "dark" : "light");
+      return next;
     });
   };
 
   return (
-    <header className="flex w-full items-center justify-between p-4 lg:h-full lg:max-w-[300px] lg:flex-col lg:items-start lg:justify-start lg:p-0">
-      {/* logo  */}
-      <Link to="/">
-        <img src={images.logo} alt="logo" className="w-16 lg:hidden" />
+    <header className="flex w-full items-center justify-between p-6 lg:h-full lg:max-w-[280px] lg:flex-col lg:items-start lg:justify-start lg:p-10 bg-bone dark:bg-matte-black transition-colors duration-500">
+      <Link to="/" className="font-syne font-extrabold text-xl tracking-tighter">
+        THINK<span className="italic-accent font-normal lowercase tracking-normal">Tank</span>
       </Link>
-      {/* menuberg icon  */}
+
       <div className="cursor-pointer lg:hidden">
-        {isMenuActive ? (
-          <AiOutlineClose className="w-6 h-6" onClick={toggleMenuHandler} />
-        ) : (
-          <AiOutlineMenu className="w-6 h-6" onClick={toggleMenuHandler} />
-        )}
+        {isMenuActive ? <AiOutlineClose onClick={toggleMenuHandler} /> : <AiOutlineMenu onClick={toggleMenuHandler} />}
       </div>
-      {/* sidebarcontainer  */}
+
       {isMenuActive && (
-        <div className="fixed inset-0 lg:static lg:h-full lg:w-full">
-          {/* underlay  */}
-          <div
-            className="fixed inset-0 bg-black/50 lg:hidden"
-            onClick={toggleMenuHandler}
-          />
-          {/* sidebar  */}
-          <div className="fixed top-0 bottom-0 left-0 z-50 w-3/4 overflow-y-auto bg-white p-4 lg:static lg:h-full lg:w-full lg:overflow-y-auto lg:p-6">
-            <Link to="/">
-              <img src={images.logo} alt="logo" className="w-16" />
-            </Link>
+        <div className="fixed inset-0 z-[100] lg:static lg:h-full lg:w-full">
+          <div className="fixed inset-0 bg-matte-black/60 lg:hidden" onClick={toggleMenuHandler} />
+          
+          <div className="fixed top-0 bottom-0 left-0 w-3/4 bg-bone dark:bg-matte-black p-10 lg:static lg:h-full lg:w-full lg:p-0 lg:mt-16 overflow-y-auto">
             <button
-              type="button"
               onClick={toggleTheme}
-              className="mt-6 flex w-full items-center justify-between rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-dark-soft transition hover:border-dark-soft"
-              aria-label="Toggle dark mode"
+              className="flex w-full items-center justify-between border-thin border-black/10 dark:border-white/10 px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 transition-all"
             >
-              <span>Theme</span>
-              {isDarkMode ? (
-                <RiSunLine className="h-4 w-4" />
-              ) : (
-                <RiMoonLine className="h-4 w-4" />
-              )}
+              <span className="font-geist text-[9px] tracking-[0.3em] uppercase opacity-40">System Mode</span>
+              {isDarkMode ? <RiSunLine className="h-3 w-3" /> : <RiMoonLine className="h-3 w-3" />}
             </button>
-            <h4 className="mt-10 font-bold text-[#c7c7c7]">MAIN MENU</h4>
-            {/* menu items  */}
-            <div className="mt-6 flex flex-col gap-y-[0.563rem]">
+
+            <h4 className="mt-16 font-geist text-[9px] tracking-[0.4em] uppercase opacity-30 mb-8">Navigation Hub</h4>
+            
+            <div className="flex flex-col gap-y-2">
               <NavItem
                 title="Dashboard"
                 link="/admin"
-                icon={<AiFillDashboard className="text-xl " />}
                 name="dashboard"
                 activeNavName={activeNavName}
                 setActiveNavName={setActiveNavName}
               />
               <NavItem
-                title="Comments"
+                title="Intelligence"
                 link="/admin/comments"
-                icon={<FaComments className="text-xl " />}
                 name="comments"
                 activeNavName={activeNavName}
                 setActiveNavName={setActiveNavName}
               />
 
               <NavItemCollapse
-                title="Posts"
-                icon={<MdDashboard className="text-xl " />}
+                title="Archives"
                 name="posts"
                 activeNavName={activeNavName}
                 setActiveNavName={setActiveNavName}
               >
-                <Link to="/admin/posts/manage">Manage all Posts</Link>
-                <button
-                disabled={isLoadingCreatePost}
-                  className="text-start disabled:opacity-60 disabled:cursor-not-allowed"
-                  onClick={() =>
-                    handleCreateNewPost({ token: userState.userInfo.token })
-                  }
-                >
-                  Add New Post
-                </button>
-                <Link to="/admin/categories/manage">Categories</Link>
+                <div className="flex flex-col gap-4 pl-4 mt-4 border-l-thin border-black/10 dark:border-white/10">
+                  <Link to="/admin/posts/manage" className="font-bricolage text-[11px] uppercase tracking-widest opacity-60 hover:opacity-100 transition-opacity">Inventory</Link>
+                  <button
+                    disabled={isLoadingCreatePost}
+                    className="text-left font-bricolage text-[11px] uppercase tracking-widest opacity-60 hover:opacity-100 transition-opacity disabled:opacity-20"
+                    onClick={() => mutateCreatePost({ token: userState.userInfo.token })}
+                  >
+                    New Entry
+                  </button>
+                  <Link to="/admin/categories/manage" className="font-bricolage text-[11px] uppercase tracking-widest opacity-60 hover:opacity-100 transition-opacity">Categories</Link>
+                </div>
               </NavItemCollapse>
 
               <NavItem
-                title="Users"
+                title="Nodes"
                 link="/admin/users/manage"
-                icon={<FaUser className="text-xl " />}
                 name="users"
                 activeNavName={activeNavName}
                 setActiveNavName={setActiveNavName}
               />
               <NavItem
-                title="API Key"
+                title="Key Exchange"
                 link="/admin/settings/api-key"
-                icon={<AiOutlineKey className="text-xl " />}
                 name="api-key"
                 activeNavName={activeNavName}
                 setActiveNavName={setActiveNavName}
               />
+            </div>
+
+            <div className="mt-auto pt-20 hidden lg:block">
+              <span className="font-ibm text-[8px] tracking-widest uppercase opacity-20 block mb-2">v.01.2026 / Stable</span>
+              <span className="font-ibm text-[8px] tracking-widest uppercase opacity-20 block">Design for Discipline</span>
             </div>
           </div>
         </div>
@@ -188,3 +135,4 @@ const Header = () => {
 };
 
 export default Header;
+

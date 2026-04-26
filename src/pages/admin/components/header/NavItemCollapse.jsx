@@ -1,50 +1,58 @@
-import React, { Children, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const NavItemCollapse = ({
   title,
   children,
-  icon,
   name,
   activeNavName,
   setActiveNavName,
 }) => {
-  const [isChecked, setIsChecked] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-useEffect(() => {
-  if(activeNavName !== name) {
-    setIsChecked(false);
-  }
-},[activeNavName, name])
+  useEffect(() => {
+    if (activeNavName !== name) {
+      setIsOpen(false);
+    } else {
+      setIsOpen(true);
+    }
+  }, [activeNavName, name]);
 
   return (
-    <div className="d-collapse d-collapse-arrow bg-base-200 min-h-0 rounded-none py-2">
-      <input
-        type="checkbox"
-        className="min-h-0 py-0"
-        checked={name === activeNavName}
-        onChange={() => {
+    <div className="py-2">
+      <button
+        className={`${
+          name === activeNavName ? "opacity-100" : "opacity-40 hover:opacity-60"
+        } flex w-full items-center justify-between font-bricolage text-sm uppercase tracking-[0.2em] transition-all py-2`}
+        onClick={() => {
           setActiveNavName(name);
-          setIsChecked(!isChecked);
+          setIsOpen(!isOpen);
         }}
-      />
-      <div
-        className={`d-collapse-title font-medium min-h-0 py-0 pl-0 flex items-center gap-x-2 text-lg ${
-          name === activeNavName
-            ? "font-bold text-primary"
-            : "font-semibold text-[#a5a5a5]"
-        }`}
       >
-        {icon}
-        {title}
-      </div>
-      <div className="d-collapse-content">
-       <div className="mt-2 flex flex-col gap-y-2">
-        {children}
-       </div>
-      </div>
+        <span>{title}</span>
+        <span className={`text-[8px] transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}>
+          ▼
+        </span>
+      </button>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+            className="overflow-hidden"
+          >
+            <div className="flex flex-col gap-y-4 pt-4">
+              {children}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
 
 export default NavItemCollapse;
+

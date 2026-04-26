@@ -231,8 +231,11 @@ const EditPost = () => {
         return file;
       };
       const picture = await urlToObject(
-        stables.UPLOAD_FOLDER_BASE_URL + data?.photo
+        data.photo.startsWith("http")
+          ? data.photo
+          : stables.UPLOAD_FOLDER_BASE_URL + data.photo
       );
+
 
       updatedData.append("postPicture", picture);
     }
@@ -284,10 +287,15 @@ const EditPost = () => {
                 />
               ) : initialPhoto ? (
                 <img
-                  src={stables.UPLOAD_FOLDER_BASE_URL + data?.photo}
+                  src={
+                    data?.photo.startsWith("http")
+                      ? data.photo
+                      : stables.UPLOAD_FOLDER_BASE_URL + data.photo
+                  }
                   alt={data?.title}
                   className="rounded-xl w-full "
                 />
+
               ) : (
                 <div className="w-full min-h-[200px] bg-yellow-50/50 flex justify-center items-center">
                   <FaCameraRetro className="w-7 h-auto text-primary" />

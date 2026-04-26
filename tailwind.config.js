@@ -5,19 +5,32 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "#FFC312",
+        primary: "#F2F2F2",
+        "matte-black": "#050505",
+        "industrial-gray": "#1A1A1A",
+        bone: "#F2F2F2",
         dark: {
-          light: "#5A7184",
-          hard: "#0D2436",
-          soft: "#183B56",
+          light: "rgba(242, 242, 242, 0.65)",
+          hard: "#050505",
+          soft: "#0A0A0A",
         },
       },
       fontFamily: {
-        ops: ["Open Sans", "sans-serif"],
-        rob: ["Roboto", "sans-serif"],
+        syne: ["Syne", "sans-serif"],
+        cormorant: ["Cormorant Garamond", "serif"],
+        ibm: ["IBM Plex Mono", "monospace"],
+        bricolage: ["Bricolage Grotesque", "sans-serif"],
+        geist: ["Geist Mono", "monospace"],
+        inter: ["Inter", "sans-serif"],
+        ops: ["Inter", "sans-serif"],
+        rob: ["Bricolage Grotesque", "sans-serif"],
+      },
+      borderWidth: {
+        '0.5': '0.5px',
       },
     },
   },
+
   plugins: [require("@tailwindcss/typography"), require("daisyui")],
 
   daisyui: {
