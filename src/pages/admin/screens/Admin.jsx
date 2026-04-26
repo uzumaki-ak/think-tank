@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 
-import { getAllPosts } from "../../../services/index/posts";
+import { getAllPosts, getAnalytics } from "../../../services/index/posts";
 import { getAllComments } from "../../../services/index/comments";
 import { getAllUsers } from "../../../services/index/users";
 import { getAllCategories } from "../../../services/index/postCategories";
@@ -13,6 +13,34 @@ import { stables, images } from "../../../constants";
 const Admin = () => {
   const userState = useSelector((state) => state.user);
   const token = userState.userInfo?.token || "";
+
+  const { data: analyticsData, isLoading: analyticsLoading } = useQuery({
+    queryFn: () => getAnalytics({ token }),
+    queryKey: ["admin-analytics", token],
+    enabled: Boolean(token),
+  });
+
+  const { data: postsData, isLoading: postsLoading, isError: postsError } = useQuery({
+    queryFn: () => getAllPosts("", 1, 50),
+    queryKey: ["admin-posts"],
+  });
+
+  const { data: commentsData, isLoading: commentsLoading } = useQuery({
+    queryFn: () => getAllComments(token, "", 1, 50),
+    queryKey: ["admin-comments", token],
+    enabled: Boolean(token),
+  });
+
+  const { data: usersData, isLoading: usersLoading } = useQuery({
+    queryFn: () => getAllUsers(token, "", 1, 50),
+    queryKey: ["admin-users", token],
+    enabled: Boolean(token),
+  });
+
+  const { data: categoriesData, isLoading: categoriesLoading } = useQuery({
+    queryFn: () => getAllCategories("", 1, 50),
+    queryKey: ["admin-categories"],
+  });
 
   const parseTotalCount = (headers) => {
     const raw = headers?.["x-totalcount"];
@@ -32,29 +60,6 @@ const Admin = () => {
       year: "numeric",
     });
   };
-
-  const { data: postsData, isLoading: postsLoading, isError: postsError } = useQuery({
-    queryFn: () => getAllPosts("", 1, 50),
-    queryKey: ["admin-posts"],
-    onError: (error) => toast.error(error.message),
-  });
-
-  const { data: commentsData, isLoading: commentsLoading } = useQuery({
-    queryFn: () => getAllComments(token, "", 1, 50),
-    queryKey: ["admin-comments", token],
-    enabled: Boolean(token),
-  });
-
-  const { data: usersData, isLoading: usersLoading } = useQuery({
-    queryFn: () => getAllUsers(token, "", 1, 50),
-    queryKey: ["admin-users", token],
-    enabled: Boolean(token),
-  });
-
-  const { data: categoriesData, isLoading: categoriesLoading } = useQuery({
-    queryFn: () => getAllCategories("", 1, 50),
-    queryKey: ["admin-categories"],
-  });
 
   const totalPosts = parseTotalCount(postsData?.headers);
   const totalComments = parseTotalCount(commentsData?.headers);
@@ -151,19 +156,25 @@ const Admin = () => {
             <span className="font-ibm text-[10px] text-blue-500 uppercase tracking-widest">[LIVE_SYNC]</span>
           </div>
           <div className="h-48 flex items-end gap-2">
-            {[60, 40, 85, 50, 70, 90, 30].map((val, i) => (
-              <div key={i} className="flex-1 flex flex-col items-center gap-2 group">
-                <div 
-                  className={`w-full ${val > 70 ? 'bg-[#00FF94]' : val > 40 ? 'bg-[#4D96FF]' : 'bg-[#FF4D4D]'} opacity-40 group-hover:opacity-100 transition-all duration-500 relative`} 
-                  style={{ height: `${val}%` }}
-                >
-                  <div className="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity font-ibm text-[8px] tracking-tighter">
-                    {val}%
+            {analyticsLoading ? (
+              <div className="w-full h-full flex items-center justify-center font-ibm text-[10px] opacity-20 uppercase animate-pulse">Syncing Engagement Flow...</div>
+            ) : analyticsData?.engagementFlow?.length > 0 ? (
+              analyticsData.engagementFlow.map((day, i) => (
+                <div key={i} className="flex-1 flex flex-col items-center gap-2 group">
+                  <div 
+                    className="w-full bg-[#4D96FF] opacity-40 group-hover:opacity-100 transition-all duration-500 relative" 
+                    style={{ height: `${Math.min(100, (day.count / (analyticsData.metrics.totalVisits || 1)) * 500)}%` }}
+                  >
+                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity font-ibm text-[8px] tracking-tighter whitespace-nowrap">
+                      {day.count} VIEWS
+                    </div>
                   </div>
+                  <span className="font-ibm text-[7px] opacity-20 uppercase">{day._id.split("-").slice(1).join("/")}</span>
                 </div>
-                <span className="font-ibm text-[7px] opacity-20 uppercase">W{i + 1}</span>
-              </div>
-            ))}
+              ))
+            ) : (
+              <div className="w-full h-full flex items-center justify-center font-ibm text-[10px] opacity-20 uppercase border-thin border-dashed">No Access Data</div>
+            )}
           </div>
         </div>
       </div>
@@ -174,16 +185,16 @@ const Admin = () => {
           <div className="absolute top-0 right-0 p-4 font-ibm text-[10px] text-green-500 opacity-20">[PEAK_TRAFFIC]</div>
           <span className="font-geist text-[9px] tracking-[0.4em] uppercase opacity-30 block mb-6">High Impact Node / Most Viewed</span>
           {postsData?.data?.sort((a,b) => (b.views || 0) - (a.views || 0))[0] ? (
-            <Link to={`/blog/${postsData.data[0].slug}`} className="flex gap-6">
+            <Link to={`/admin/posts/manage/edit/${postsData.data.sort((a,b) => (b.views || 0) - (a.views || 0))[0].slug}`} className="flex gap-6">
               <img 
-                src={postsData.data[0].photo ? (postsData.data[0].photo.startsWith("http") ? postsData.data[0].photo : stables.UPLOAD_FOLDER_BASE_URL + postsData.data[0].photo) : images.samplePostImage}
+                src={postsData.data.sort((a,b) => (b.views || 0) - (a.views || 0))[0].photo ? (postsData.data.sort((a,b) => (b.views || 0) - (a.views || 0))[0].photo.startsWith("http") ? postsData.data.sort((a,b) => (b.views || 0) - (a.views || 0))[0].photo : stables.UPLOAD_FOLDER_BASE_URL + postsData.data.sort((a,b) => (b.views || 0) - (a.views || 0))[0].photo) : images.samplePostImage}
                 alt=""
                 className="w-24 h-24 object-cover border-thin grayscale group-hover:grayscale-0 transition-all"
               />
               <div className="flex-1 flex flex-col justify-center">
-                <h4 className="font-syne font-bold text-xl uppercase tracking-tight mb-2 line-clamp-1">{postsData.data[0].title}</h4>
+                <h4 className="font-syne font-bold text-xl uppercase tracking-tight mb-2 line-clamp-1">{postsData.data.sort((a,b) => (b.views || 0) - (a.views || 0))[0].title}</h4>
                 <div className="flex gap-4 items-center">
-                  <span className="font-ibm text-[10px] font-bold text-green-500">{postsData.data[0].views || 0} READS</span>
+                  <span className="font-ibm text-[10px] font-bold text-green-500">{postsData.data.sort((a,b) => (b.views || 0) - (a.views || 0))[0].views || 0} READS</span>
                   <span className="font-geist text-[8px] tracking-widest uppercase opacity-30 underline decoration-dotted underline-offset-4">Primary Index</span>
                 </div>
               </div>
@@ -197,16 +208,16 @@ const Admin = () => {
           <div className="absolute top-0 right-0 p-4 font-ibm text-[10px] text-blue-500 opacity-20">[PEAK_ENGAGEMENT]</div>
           <span className="font-geist text-[9px] tracking-[0.4em] uppercase opacity-30 block mb-6">High Discussion Node / Most Commented</span>
           {postsData?.data?.sort((a,b) => (b.comments?.length || 0) - (a.comments?.length || 0))[0] ? (
-            <Link to={`/blog/${postsData.data[0].slug}`} className="flex gap-6">
+            <Link to={`/admin/posts/manage/edit/${postsData.data.sort((a,b) => (b.comments?.length || 0) - (a.comments?.length || 0))[0].slug}`} className="flex gap-6">
               <img 
-                src={postsData.data[0].photo ? (postsData.data[0].photo.startsWith("http") ? postsData.data[0].photo : stables.UPLOAD_FOLDER_BASE_URL + postsData.data[0].photo) : images.samplePostImage}
+                src={postsData.data.sort((a,b) => (b.comments?.length || 0) - (a.comments?.length || 0))[0].photo ? (postsData.data.sort((a,b) => (b.comments?.length || 0) - (a.comments?.length || 0))[0].photo.startsWith("http") ? postsData.data.sort((a,b) => (b.comments?.length || 0) - (a.comments?.length || 0))[0].photo : stables.UPLOAD_FOLDER_BASE_URL + postsData.data.sort((a,b) => (b.comments?.length || 0) - (a.comments?.length || 0))[0].photo) : images.samplePostImage}
                 alt=""
                 className="w-24 h-24 object-cover border-thin grayscale group-hover:grayscale-0 transition-all"
               />
               <div className="flex-1 flex flex-col justify-center">
-                <h4 className="font-syne font-bold text-xl uppercase tracking-tight mb-2 line-clamp-1">{postsData.data[0].title}</h4>
+                <h4 className="font-syne font-bold text-xl uppercase tracking-tight mb-2 line-clamp-1">{postsData.data.sort((a,b) => (b.comments?.length || 0) - (a.comments?.length || 0))[0].title}</h4>
                 <div className="flex gap-4 items-center">
-                  <span className="font-ibm text-[10px] font-bold text-blue-500">{postsData.data[0].comments?.length || 0} SIGNALS</span>
+                  <span className="font-ibm text-[10px] font-bold text-blue-500">{postsData.data.sort((a,b) => (b.comments?.length || 0) - (a.comments?.length || 0))[0].comments?.length || 0} SIGNALS</span>
                   <span className="font-geist text-[8px] tracking-widest uppercase opacity-30 underline decoration-dotted underline-offset-4">Social Index</span>
                 </div>
               </div>
@@ -232,28 +243,27 @@ const Admin = () => {
           </div>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
-          {[
-            { country: "United States", code: "US", val: 42 },
-            { country: "United Kingdom", code: "UK", val: 18 },
-            { country: "Germany", code: "DE", val: 12 },
-            { country: "India", code: "IN", val: 10 },
-            { country: "Japan", code: "JP", val: 8 },
-            { country: "Canada", code: "CA", val: 5 },
-          ].map((loc, i) => (
-            <div key={i} className="flex flex-col gap-2 group">
-              <div className="flex items-baseline justify-between">
-                <span className="font-ibm text-[10px] uppercase opacity-40 group-hover:opacity-100 transition-opacity">{loc.code}</span>
-                <span className="font-ibm text-xs font-bold">{loc.val}%</span>
+          {analyticsLoading ? (
+            <div className="col-span-full h-12 flex items-center justify-center font-ibm text-[10px] opacity-20 uppercase animate-pulse">Resolving Global Nodes...</div>
+          ) : analyticsData?.topCountries?.length > 0 ? (
+            analyticsData.topCountries.map((loc, i) => (
+              <div key={i} className="flex flex-col gap-2 group">
+                <div className="flex items-baseline justify-between">
+                  <span className="font-ibm text-[10px] uppercase opacity-40 group-hover:opacity-100 transition-opacity">{loc.code || "XX"}</span>
+                  <span className="font-ibm text-xs font-bold">{((loc.count / analyticsData.metrics.totalVisits) * 100).toFixed(0)}%</span>
+                </div>
+                <div className="h-1 bg-black/5 dark:bg-white/5 relative">
+                  <div 
+                    className="absolute inset-y-0 left-0 bg-black dark:bg-white transition-all duration-1000" 
+                    style={{ width: `${(loc.count / analyticsData.metrics.totalVisits) * 100}%` }} 
+                  />
+                </div>
+                <span className="font-geist text-[7px] tracking-[0.2em] uppercase opacity-20">{loc._id || "Unknown"}</span>
               </div>
-              <div className="h-1 bg-black/5 dark:bg-white/5 relative">
-                <div 
-                  className="absolute inset-y-0 left-0 bg-black dark:bg-white transition-all duration-1000 delay-300" 
-                  style={{ width: `${loc.val}%` }} 
-                />
-              </div>
-              <span className="font-geist text-[7px] tracking-[0.2em] uppercase opacity-20">{loc.country}</span>
-            </div>
-          ))}
+            ))
+          ) : (
+            <div className="col-span-full h-24 flex items-center justify-center border-thin border-dashed opacity-20">NO GEOGRAPHICAL DATA COLLECTED</div>
+          )}
         </div>
       </section>
 

@@ -114,3 +114,19 @@ export const createPost = async ({ token }) => {
     throw new Error(error.message);
   }
 };
+
+export const getAnalytics = async ({ token }) => {
+  try {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const { data } = await axios.get("/api/posts/analytics", config);
+    return data;
+  } catch (error) {
+    if (error.response && error.response.data.message)
+      throw new Error(error.response.data.message);
+    throw new Error(error.message);
+  }
+};

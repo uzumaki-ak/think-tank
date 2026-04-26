@@ -1,15 +1,17 @@
-import React from 'react'
+import React from 'react';
 import Header from './Header';
 import Footer from './Footer';
+import AIAssistant from './AIAssistant';
 
 const MainLayout = ({children}) => {
   return (
-    <div>
+    <div className="bg-bone dark:bg-matte-black transition-colors duration-500 min-h-screen">
       <Header />
-      {children}
+      <main className="relative z-10">{children}</main>
       <Footer />
+      <AIAssistant />
     </div>
-  )
-}
+  );
+};
 
-export default MainLayout
+export default MainLayout;

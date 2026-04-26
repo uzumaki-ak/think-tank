@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import CreatableSelect from "react-select/creatable";
 import { getSinglePost, updatePost } from "../../../../services/index/posts";
 
@@ -133,48 +134,14 @@ const EditPost = () => {
       .trim();
 
   const callGemini = async (promptText) => {
-    const apiKey = getAiApiKey();
-    if (!apiKey) {
-      throw new Error("Please add your API key in Admin > API Key first.");
-    }
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              role: "user",
-              parts: [{ text: promptText }],
-            },
-          ],
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      const message =
-        errorData?.error?.message || "Failed to generate AI content";
-      throw new Error(message);
-    }
-
-    const data = await response.json();
-    const text =
-      data?.candidates?.[0]?.content?.parts?.map((part) => part.text).join("") ||
-      "";
-    return extractText(text);
+    const { data } = await axios.post("/api/ai/query", {
+      prompt: promptText,
+      context: "Editorial Content Suite"
+    });
+    return extractText(data.content);
   };
 
   const openAiPrompt = (target) => {
-    const apiKey = getAiApiKey();
-    if (!apiKey) {
-      toast.error("Add your Gemini API key in Admin > API Key first.");
-      return;
-    }
     setAiTarget(target);
     setAiPrompt("");
   };
