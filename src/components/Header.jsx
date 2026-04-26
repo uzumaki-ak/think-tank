@@ -101,7 +101,7 @@ const Header = () => {
         <Link to="/" className="flex items-center gap-2 md:gap-4 group relative z-[110]">
           <div className="relative w-8 h-8 md:w-10 md:h-10 border-[1.5px] border-black dark:border-white flex items-center justify-center overflow-hidden flex-shrink-0">
              <div className="absolute inset-0 bg-black/10 dark:bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-             <svg width="16" height="16" md:width="20" md:height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="square" className="relative z-10">
+             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="square" className="relative z-10 w-4 h-4 md:w-5 md:h-5">
                 <path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z" />
              </svg>
           </div>
